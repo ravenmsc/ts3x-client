@@ -1,0 +1,15 @@
+TS3X Client
+Copyright 2026 TS3X Client contributors.
+
+The original TS3X Client code is licensed under the Apache License, Version 2.0.
+
+This product includes modified software from Manevolent/ts3j:
+https://github.com/Manevolent/ts3j
+Upstream revision: db57d60c989e399626aa16d921390f5033e6cdeb
+The upstream Apache 2.0 license is retained in ts3j/LICENSE.
+Existing third-party source and notices, including the Punisher/NaCl package,
+are retained as provided by that upstream revision.
+See ts3j/UPSTREAM.properties for provenance and local changes.
+
+TeamSpeak is a trademark of its respective owner. TS3X Client is an independent
+project and is not affiliated with or endorsed by TeamSpeak.
