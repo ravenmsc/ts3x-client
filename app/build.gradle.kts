@@ -14,8 +14,8 @@ android {
         applicationId = "com.morsen.ts3xclient"
         minSdk = 26
         targetSdk = 35
-        versionCode = 530
-        versionName = "0.9.0"
+        versionCode = 542
+        versionName = "0.10.2"
     }
 
     buildFeatures {

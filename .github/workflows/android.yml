@@ -34,6 +34,6 @@ jobs:
       - name: Save unsigned release APK
         uses: actions/upload-artifact@v4
         with:
-          name: TS3XClient-0.9.0-530-unsigned
+          name: TS3XClient-0.10.2-542-unsigned
           path: app/build/outputs/apk/release/*.apk
           if-no-files-found: error
