@@ -1,48 +1,48 @@
 # TS3X Client
 
-Android-клиент для голосового общения на серверах **TeamSpeak 3 и TeamSpeak 6** с интерфейсом на Jetpack Compose.
+An Android voice client for **TeamSpeak 3 and TeamSpeak 6** servers, built with Jetpack Compose.
 
-**Релиз: 0.10.2 (542)** · **Android 8.0+ (API 26)** · `com.morsen.ts3xclient`
+**Release: 0.10.2 (542)** · **Android 8.0+ (API 26)** · `com.morsen.ts3xclient`
 
-Проект является независимым клиентом и не является официальным продуктом TeamSpeak. Названия и товарные знаки TeamSpeak принадлежат их правообладателям.
+TS3X Client is an independent project and is not an official TeamSpeak product. TeamSpeak names and trademarks belong to their respective owners.
 
-## Возможности
+## Features
 
-- Подключение к TS3 и TS6 через единый интерфейс, сохранённые профили серверов, пароли и идентификаторы.
-- Адреса `host:port` в поле Host, DNS, SRV и TSDNS. Порт в адресе имеет приоритет над полем Port.
-- Дерево каналов, участники, аватары, флаги стран, значки серверных и канальных групп. Участники отображаются и в доступных для входа spacer-каналах.
-- Голосовое общение, отключение микрофона и звука, Push-to-Talk, индикатор передачи голоса и настройка громкости участников.
-- Работа голосовой сессии в фоне с постоянным уведомлением и аудиоуправлением.
-- Мониторинг серверов, фоновые проверки и уведомления. При включении мониторинга приложение проверяет ограничения работы в фоне и предлагает необходимые настройки батареи.
-- Чат канала и приватные сообщения внутри подключённого сервера, превью доступных изображений и отображение сведений о вложениях.
-- Просмотр описаний и баннеров каналов: одно нажатие открывает сведения, двойное — подключает к каналу.
-- Загрузка, кадрирование и удаление собственного аватара, серверные аватары и доступные аватары myTeamSpeak других участников.
-- AFK со своим сообщением, сведения о подключении, poke, управление группами, kick и ban при наличии серверных прав.
-- Приглашения `ts3x://server/add?...` и поддерживаемые ссылки `tmspk.gg`.
-- Кэширование изображений и метаданных, экспорт диагностических данных и отчётов о сбоях.
-- Английский язык по умолчанию; ручной выбор локализации в настройках.
+- Connect to TS3 and TS6 servers through a single interface, with saved server profiles, passwords and identities.
+- Enter `host:port` directly in the Host field. Supports DNS, SRV and TSDNS resolution; a port included in the address takes precedence over the Port field.
+- Browse channels and participants with avatars, country flags, and server and channel group icons. Participants are also displayed in joinable spacer channels.
+- Voice communication, microphone mute, output mute, Push-to-Talk, a voice transmission indicator and individual participant volume controls.
+- Background voice sessions with a persistent notification and audio controls.
+- Server monitoring, background checks and notifications. When monitoring is enabled, the app checks background restrictions and offers the relevant battery settings.
+- Channel chat and private messaging within the connected server, image previews and attachment information.
+- Channel descriptions and banners: tap once to view details, or twice to join the channel.
+- Upload, crop and remove your avatar; view server avatars and available myTeamSpeak account avatars of other participants.
+- AFK status with a custom message, connection information, poke, group management, kick and ban actions, subject to server permissions.
+- Support for `ts3x://server/add?...` invitations and supported `tmspk.gg` links.
+- Image and metadata caching, diagnostic data export and crash reports.
+- English by default, with manual language selection in Settings.
 
-## Начало работы
+## Getting Started
 
-1. Установите подписанный APK из доверенного источника или соберите приложение самостоятельно.
-2. При первом запуске предоставьте разрешения на микрофон и уведомления для голосовой связи и фоновых уведомлений.
-3. Добавьте сервер: укажите имя хоста либо `host:port`, никнейм и при необходимости пароль.
-4. Подключитесь и выберите канал. Двойное нажатие на канал выполняет вход.
-5. Для фоновой работы и мониторинга разрешите приложению работу без ограничений в системных настройках батареи. Названия пунктов зависят от устройства.
+1. Install a signed APK from a trusted source, or build the app yourself.
+2. On first launch, grant microphone and notification permissions to enable voice communication and background notifications.
+3. Add a server using its hostname or `host:port`, your nickname and a password if required.
+4. Connect and select a channel. Double-tap a channel to join it.
+5. For background voice sessions and monitoring, allow unrestricted background operation in your device's battery settings. Setting names vary by device.
 
-## Совместимость и ограничения
+## Compatibility and Limitations
 
-Функции управления пользователями, аватарами и группами зависят от серверных разрешений. Поддержка TS6 относится к подключению к голосовым серверам и совместимым клиентским командам: приложение не реализует всю экосистему официального клиента.
+User, avatar and group management depend on server permissions. TS6 support covers connections to voice servers and compatible client commands; the app does not implement the full official client ecosystem.
 
-Авторизация myTeamSpeak, глобальные чаты, сообщества и скачивание облачных вложений только по `file_id` не реализованы. Сведения о таких вложениях могут отображаться без возможности загрузки. Показ аватаров аккаунтов использует доступные URL из серверных метаданных и не требует входа в аккаунт.
+myTeamSpeak sign-in, global chats, communities and downloading cloud attachments using only a `file_id` are not implemented. Attachment information may be displayed without a download option. Account avatars use available URLs from server metadata and do not require account sign-in.
 
-Доступность серверов и внешних изображений зависит от маршрутизации, DNS, сетевых ограничений и конфигурации сервера. Отдельные показатели статистики могут отсутствовать, если сервер или транспорт их не предоставляет.
+Server and external image availability depend on routing, DNS, network restrictions and server configuration. Some connection statistics may be unavailable if the server or transport does not provide them.
 
-## Сборка
+## Building
 
-Требуются **JDK 17**, Android SDK с **API 35**, Android SDK Build Tools **34.0.0** и доступ к репозиториям зависимостей. В проект включён Gradle Wrapper **8.9**. Версии Android Gradle Plugin и Kotlin зафиксированы в `build.gradle.kts`.
+Requirements: **JDK 17**, Android SDK **API 35**, Android SDK Build Tools **34.0.0**, and access to the dependency repositories. The project includes **Gradle Wrapper 8.9**. Android Gradle Plugin and Kotlin versions are pinned in `build.gradle.kts`.
 
-Откройте корневую папку в Android Studio, укажите Android SDK и выполните Gradle Sync. Локальный путь SDK хранится в `local.properties`; этот файл не включается в репозиторий и архив исходников. Для сборки из терминала можно задать `ANDROID_HOME`.
+Open the project root in Android Studio, configure the Android SDK and run Gradle Sync. The local SDK path is stored in `local.properties`, which is excluded from the repository and source archives. For command-line builds, you can set `ANDROID_HOME` instead.
 
 Windows PowerShell:
 
@@ -60,40 +60,40 @@ Linux / macOS:
 ./gradlew :app:assembleRelease
 ```
 
-Debug APK создаётся в `app/build/outputs/apk/debug/`. Release APK создаётся в `app/build/outputs/apk/release/` и без собственной настройки подписи остаётся **неподписанным**. Для распространяемого релиза используйте **Build → Generate Signed App Bundle / APK** в Android Studio и собственный ключ. Сохраните ключ для последующих обновлений; ключи и пароли не должны попадать в Git.
+The debug APK is generated in `app/build/outputs/apk/debug/`. The release APK is generated in `app/build/outputs/apk/release/` and remains **unsigned** unless you configure signing. For distribution, use **Build → Generate Signed App Bundle / APK** in Android Studio with your own signing key. Keep the key for future updates; do not commit keys or passwords to Git.
 
-## Проверки
+## Testing
 
-Модульные тесты находятся в `protocol/src/test` и `ts3j/src/test`. Проверки, которым нужен настоящий сервер, по умолчанию пропускаются. Локальные сетевые тесты используют loopback и не обращаются к публичным серверам.
+Unit tests are located in `protocol/src/test` and `ts3j/src/test`. Tests that require a live server are skipped by default. Local network tests use loopback and do not contact public servers.
 
-Для дополнительной интеграционной проверки можно использовать `tools/run_protocol_integration.py` с отдельно установленным официальным сервером TS3 или TS6. Перед запуском ознакомьтесь с лицензией соответствующего сервера. Параметры доступны через `--help`.
+For additional integration testing, use `tools/run_protocol_integration.py` with a separately installed official TS3 or TS6 server. Read the license of the corresponding server before running it. Use `--help` to view the available options.
 
-GitHub Actions выполняет модульные тесты, Android lint и сборку неподписанного release APK при push в `main`/`dev` и при pull request. Публикация GitHub Release и подписание APK остаются отдельными действиями владельца проекта.
+The GitHub Actions workflow runs unit tests, Android lint and an unsigned release APK build on pushes to `main` or `dev` and on pull requests. Publishing GitHub Releases and signing APKs are separate tasks performed by the project owner.
 
-## Структура проекта
+## Project Structure
 
-| Каталог | Назначение |
+| Directory | Purpose |
 | --- | --- |
-| `app/` | Android-приложение, Compose UI, аудио, службы и настройки |
-| `protocol/` | Общие правила протокола, адресация, файлы, аватары и тесты |
-| `ts3j/` | Включённый транспорт TeamSpeak с локальными исправлениями |
-| `tools/` | Инструмент локальных интеграционных проверок |
-| `.github/workflows/` | Проверки и сборка в GitHub Actions |
+| `app/` | Android application, Compose UI, audio, services and settings |
+| `protocol/` | Shared protocol logic, address resolution, files, avatars and tests |
+| `ts3j/` | Bundled TeamSpeak transport with local fixes |
+| `tools/` | Local integration testing tool |
+| `.github/workflows/` | GitHub Actions checks and builds |
 
-## Диагностика и данные
+## Diagnostics and Data
 
-Профили серверов, идентификаторы и выбранный аватар хранятся на устройстве. Для голоса используется микрофон; активная голосовая сессия работает через foreground service. Android backup приложения отключён в manifest.
+Server profiles, identities and the selected avatar are stored on the device. Voice communication uses the microphone, and an active voice session runs through a foreground service. Android backup is disabled in the application manifest.
 
-Перед публикацией журналов и отчётов проверьте их содержимое: адреса серверов, имена пользователей, сообщения и другие данные могут быть личными. Приглашение с паролем содержит данные для подключения; Base64-кодирование не является шифрованием. Передавайте такие ссылки только предполагаемым участникам.
+Review logs and reports before sharing them: server addresses, usernames, messages and other information may be private. An invitation containing a password includes connection credentials; Base64 encoding is not encryption. Share such links only with the intended participants.
 
-## Лицензия
+## License
 
-Собственный код TS3X Client распространяется по **Apache License 2.0**. Полный текст находится в [LICENSE](LICENSE), уведомления об авторстве и стороннем коде — в [NOTICE](NOTICE).
+The original TS3X Client code is licensed under the **Apache License 2.0**. See [LICENSE](LICENSE) for the full terms and [NOTICE](NOTICE) for attribution and third-party notices.
 
-Лицензия разрешает использование, изменение и распространение при соблюдении её условий, включая сохранение применимых уведомлений и обозначение изменений. Программное обеспечение предоставляется без гарантий. Полный текст LICENSE определяет условия использования.
+The license permits use, modification and distribution under its terms, including preservation of applicable notices and identification of changes. The software is provided without warranties. The full LICENSE text governs its use.
 
-Включённый модуль [ts3j](https://github.com/Manevolent/ts3j) основан на ревизии `db57d60c989e399626aa16d921390f5033e6cdeb`, изменён для TS3X Client и сохраняет исходную лицензию в `ts3j/LICENSE`. Происхождение и изменения указаны в `ts3j/UPSTREAM.properties`. Лицензии и уведомления стороннего кода сохраняют силу; лицензия приложения не заменяет их. Зависимости, получаемые через Gradle, распространяются на условиях соответствующих правообладателей.
+The bundled [ts3j](https://github.com/Manevolent/ts3j) module is based on revision `db57d60c989e399626aa16d921390f5033e6cdeb`, includes modifications for TS3X Client, and retains its upstream license in `ts3j/LICENSE`. Provenance and local changes are documented in `ts3j/UPSTREAM.properties`. Third-party licenses and notices remain applicable and are not replaced by the application's license. Dependencies obtained through Gradle remain subject to their respective owners' license terms.
 
-## Участие в проекте
+## Contributing
 
-Для сообщения об ошибке укажите версию приложения и Android, версию сервера, шаги воспроизведения и очищенный от личных данных журнал. Изменения готовятся в отдельных ветках и предлагаются через pull request. Версии приложения меняются явно в `app/build.gradle.kts`; выпуск отмечается тегом после слияния в `main`.
+When reporting a bug, include the application and Android versions, the server version, steps to reproduce the issue, and a log with private information removed. Prepare changes in separate branches and submit them through pull requests. Application versions are changed explicitly in `app/build.gradle.kts`; releases are tagged after merging into `main`.
