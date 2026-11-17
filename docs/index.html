@@ -1,0 +1,2990 @@
+<!doctype html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="description" content="Interactive TS3X Client App UI Guide. Connecting, channels, voice calls and monitoring.">
+        <title>TS3X Client — Interactive UI Guide</title>
+        <style>
+            :root {
+                color-scheme: light;
+                --paper: #f6f7f1;
+                --white: #fff;
+                --ink: #17291f;
+                --muted: #4b6054;
+                --line: #dce4da;
+                --mint: #dbeee0;
+                --deep: #104e36;
+                --accent: #006843;
+                --app: #071b12;
+                --surface: #0e2a1d;
+                --surface2: #153828;
+                --apptext: #e7f5ed;
+                --appmuted: #a8c8b8;
+                --green: #45c486;
+                --soft: #1d5b3e;
+                font-family: Geist,Inter,system-ui,sans-serif
+            }
+
+            * {
+                box-sizing: border-box
+            }
+
+            body {
+                margin: 0;
+                background: var(--paper);
+                color: var(--ink)
+            }
+
+            button,input,textarea,select {
+                font: inherit
+            }
+
+            button {
+                cursor: pointer
+            }
+
+            button:disabled {
+                cursor: default
+            }
+
+            a {
+                color: inherit
+            }
+
+            button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible {
+                outline: 3px solid #1c9273;
+                outline-offset: 3px
+            }
+
+            button, a {
+                -webkit-tap-highlight-color: transparent
+            }
+
+            [hidden] {
+                display: none!important
+            }
+
+            .icon {
+                width: 20px;
+                height: 20px;
+                display: inline-block;
+                vertical-align: middle;
+                flex: none
+            }
+
+            .wrap {
+                max-width: 1220px;
+                padding: 0 34px;
+                margin: auto
+            }
+
+            .top {
+                border-bottom: 1px solid var(--line);
+                background: #fbfcf7
+            }
+
+            .top .wrap {
+                height: 73px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 16px
+            }
+
+            .brand,.top-tools,.repository,.mode,.step-meta,.step-actions,.bottom-links {
+                display: flex;
+                align-items: center
+            }
+
+            .brand {
+                gap: 11px;
+                font-size: 17px;
+                font-weight: 780;
+                letter-spacing: -.025em;
+                text-decoration: none;
+                white-space: nowrap
+            }
+
+            .brand img {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px
+            }
+
+            .brand-divider {
+                height: 23px;
+                width: 1px;
+                background: var(--line);
+                margin: 0 4px
+            }
+
+            .brand-caption {
+                font-size: 13px;
+                font-weight: 620;
+                letter-spacing: 0;
+                color: var(--muted)
+            }
+
+            .top-tools {
+                gap: 14px
+            }
+
+            .lang {
+                display: flex;
+                gap: 3px;
+                background: #ebf0e9;
+                padding: 3px;
+                border-radius: 100px
+            }
+
+            .lang button {
+                border: 0;
+                background: transparent;
+                color: var(--muted);
+                border-radius: 100px;
+                padding: 5px 9px;
+                font-size: 12px;
+                font-weight: 760
+            }
+
+            .lang button[aria-pressed=true] {
+                color: var(--deep);
+                background: #fff;
+                box-shadow: 0 1px 2px #163c2418
+            }
+
+            .repository {
+                gap: 7px;
+                text-decoration: none;
+                border: 1px solid var(--line);
+                border-radius: 100px;
+                padding: 7px 12px;
+                font-size: 13px;
+                font-weight: 650
+            }
+
+            .repository:hover,.quiet:hover {
+                background: #eaf2e9
+            }
+
+            .repository .icon {
+                width: 16px;
+                height: 16px
+            }
+
+            .intro {
+                padding-top: 36px;
+                padding-bottom: 24px
+            }
+
+            .eyebrow {
+                display: flex;
+                gap: 9px;
+                align-items: center;
+                font-size: 12px;
+                font-weight: 760;
+                color: var(--deep);
+                margin: 0 0 10px
+            }
+
+            .eyebrow .icon {
+                width: 16px;
+                height: 16px
+            }
+
+            h1,h2,p {
+                margin: 0
+            }
+
+            h1 {
+                font-size: clamp(35px,5.05vw,65px);
+                font-weight: 800;
+                letter-spacing: -.065em;
+                line-height: 1.04
+            }
+
+            .intro p:last-child {
+                color: var(--muted);
+                font-size: 16px;
+                line-height: 1.5;
+                margin-top: 12px
+            }
+
+            .workspace {
+                display: grid;
+                grid-template-columns: minmax(0,1fr) minmax(0,1.08fr);
+                min-height: 656px;
+                border: 1px solid #dce5d9;
+                border-radius: 25px;
+                overflow: hidden;
+                background: #fff;
+                box-shadow: 0 18px 45px #203a2510
+            }
+
+            .lesson {
+                padding: 25px 29px 24px;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                gap: 22px
+            }
+
+            .navigation {
+                display: grid;
+                grid-template-columns: repeat(4,minmax(0,1fr));
+                gap: 6px
+            }
+
+            .chapter {
+                position: relative;
+                border: 1px solid #e1e8de;
+                border-radius: 9px;
+                background: #fafbf8;
+                color: #385043;
+                min-height: 38px;
+                padding: 6px 2px;
+                font-weight: 680;
+                font-size: 11px;
+                line-height: 1.2
+            }
+
+            .chapter:hover {
+                background: #eef6ed
+            }
+
+            .chapter[aria-current=step] {
+                background: #dcf0e3;
+                border-color: #9fcab1;
+                color: #14553a
+            }
+
+            .chapter[data-done=true]::after {
+                content: '✓';
+                margin-left: 3px;
+                font-size: 10px;
+                color: #07754c
+            }
+
+            .navigation .chapter:last-child {
+                border-style: dashed
+            }
+
+            .step-meta {
+                justify-content: space-between;
+                gap: 10px;
+                color: #306047;
+                font-weight: 740;
+                font-size: 12px
+            }
+
+            .mode {
+                gap: 5px;
+                font-weight: 660;
+                color: #4d6253
+            }
+
+            .mode .icon {
+                width: 15px;
+                height: 15px
+            }
+
+            .progress {
+                display: flex;
+                gap: 5px;
+                margin: 9px 0 0
+            }
+
+            .progress i {
+                flex: 1;
+                height: 4px;
+                background: #e3ece2;
+                border-radius: 8px
+            }
+
+            .progress i.current {
+                background: #80c7a0
+            }
+
+            .progress i.past {
+                background: #23865c
+            }
+
+            .step-copy h2 {
+                font-size: clamp(25px,3.15vw,43px);
+                letter-spacing: -.052em;
+                line-height: 1.04;
+                margin: 0 0 12px;
+                font-weight: 800
+            }
+
+            .step-copy p {
+                font-size: 15px;
+                line-height: 1.55;
+                color: var(--muted);
+                max-width: 48ch
+            }
+
+            .context {
+                font-size: 13px;
+                line-height: 1.5;
+                color: #3e594a;
+                background: #f2f7f0;
+                border: 1px solid #e4ece1;
+                padding: 11px 12px;
+                border-radius: 10px;
+                display: flex;
+                align-items: flex-start;
+                gap: 8px
+            }
+
+            .context .icon {
+                width: 17px;
+                height: 17px;
+                margin-top: 1px;
+                color: #227553
+            }
+
+            .step-actions {
+                flex-wrap: wrap;
+                gap: 8px;
+                min-height: 39px
+            }
+
+            .primary,.quiet {
+                min-height: 38px;
+                padding: 7px 12px;
+                display: inline-flex;
+                gap: 7px;
+                align-items: center;
+                justify-content: center;
+                border-radius: 8px;
+                font-size: 13px;
+                font-weight: 720
+            }
+
+            .primary {
+                background: #185f43;
+                color: #fff;
+                border: 1px solid #185f43
+            }
+
+            .primary:hover {
+                background: #0a4930
+            }
+
+            .quiet {
+                background: #fff;
+                border: 1px solid #dce6dc;
+                color: #295340
+            }
+
+            .quiet .icon,.primary .icon {
+                width: 16px;
+                height: 16px
+            }
+
+            .lesson-bottom {
+                margin-top: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 11px
+            }
+
+            .status {
+                font-size: 13px;
+                color: #43624e;
+                min-height: 20px;
+                line-height: 1.4
+            }
+
+            .status:empty {
+                display: none
+            }
+
+            .bottom-links {
+                padding-top: 13px;
+                border-top: 1px solid #e5ebe3;
+                justify-content: space-between;
+                gap: 8px
+            }
+
+            .link-button {
+                border: 0;
+                background: none;
+                color: #3b5948;
+                font-size: 12px;
+                font-weight: 690;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 5px 0
+            }
+
+            .link-button:hover {
+                color: #095d3a;
+                text-decoration: underline
+            }
+
+            .link-button:disabled {
+                opacity: .53
+            }
+
+            .link-button .icon {
+                width: 16px;
+                height: 16px
+            }
+
+            .stage {
+                position: relative;
+                min-width: 0;
+                isolation: isolate;
+                display: grid;
+                grid-template-rows: auto 1fr auto;
+                justify-items: center;
+                align-items: center;
+                padding: 14px 24px 12px;
+                background-color: #e4eee3;
+                background-image: radial-gradient(#9cbba78c .75px,transparent .85px),radial-gradient(ellipse at 50% 42%,#f4f8ec,transparent 72%);
+                background-size: 17px 17px,100% 100%;
+                border-left: 1px solid #dce5d9
+            }
+
+            .stage-top {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 8px;
+                color: #335b47;
+                font-size: 11px;
+                font-weight: 760
+            }
+
+            .stage-current {
+                display: none
+            }
+
+            .stage-title {
+                display: flex;
+                align-items: center;
+                gap: 6px
+            }
+
+            .stage-title .icon {
+                width: 16px;
+                height: 16px
+            }
+
+            .stage-caption {
+                color: #466354;
+                font-size: 11px;
+                text-align: center;
+                margin-top: 4px
+            }
+
+            .device {
+                width: min(100%,330px);
+                height: 584px;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                background: var(--app);
+                color: var(--apptext);
+                border: 7px solid #1a2b24;
+                border-radius: 31px;
+                margin: 9px 0;
+                box-shadow: 0 0 0 1px #788b7f,0 14px 26px #14352239;
+                overflow: hidden;
+                isolation: isolate;
+                color-scheme: dark;
+                font-family: Roboto,Arial,sans-serif
+            }
+
+            .device :focus-visible {
+                outline-color: #83efbd;
+                outline-offset: -2px
+            }
+
+            .device button {
+                color: inherit
+            }
+
+            .device.statusless .os,.device.statusless .os-bottom {
+                display: none
+            }
+
+            .os {
+                height: 27px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 14px;
+                background: var(--surface);
+                font-size: 10px;
+                font-weight: 700;
+                flex: none
+            }
+
+            .os-right {
+                display: flex;
+                align-items: center;
+                gap: 3px
+            }
+
+            .os-right .icon {
+                width: 12px;
+                height: 12px
+            }
+
+            .os-bottom {
+                height: 15px;
+                display: grid;
+                place-items: center;
+                flex: none;
+                background: var(--app);
+                z-index: 1
+            }
+
+            .os-bottom i {
+                width: 78px;
+                height: 3px;
+                background: #ccdfd3;
+                border-radius: 6px
+            }
+
+            .device[data-connected=true] .os-bottom {
+                background: #131418
+            }
+
+            .app-underlay {
+                display: flex;
+                flex: 1;
+                min-height: 0;
+                flex-direction: column
+            }
+
+            .app-view {
+                min-height: 0;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                position: relative
+            }
+
+            .appbar {
+                min-height: 52px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 0 11px 0 13px;
+                background: var(--surface);
+                flex: none
+            }
+
+            .appbar img {
+                width: 30px;
+                height: 30px;
+                border-radius: 7px
+            }
+
+            .appbar strong {
+                font-size: 17px;
+                letter-spacing: .01em;
+                flex: 1
+            }
+
+            .app-btn {
+                border: 0;
+                background: transparent;
+                padding: 0;
+                display: inline-grid;
+                place-items: center;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                flex: none
+            }
+
+            .app-btn:hover,.row-action:hover {
+                background: #ffffff15
+            }
+
+            .app-btn .icon {
+                width: 20px;
+                height: 20px
+            }
+
+            .app-btn:disabled {
+                opacity: .45
+            }
+
+            .screen-scroll,.modal-body {
+                overflow: auto;
+                scrollbar-width: thin;
+                scrollbar-color: #426c56 transparent;
+                overscroll-behavior: contain
+            }
+
+            .home {
+                padding: 11px 12px;
+                flex: 1;
+                display: flex;
+                flex-direction: column
+            }
+
+            .home-head {
+                display: grid;
+                grid-template-columns: minmax(0,1fr) auto;
+                gap: 5px;
+                align-items: start
+            }
+
+            .home-head h3 {
+                margin: 4px 0 4px;
+                font-size: 21px;
+                letter-spacing: -.025em;
+                line-height: 1.12
+            }
+
+            .home-head small,.app-note,.server-sub {
+                color: var(--appmuted);
+                font-size: 11px;
+                line-height: 1.4;
+                display: block
+            }
+
+            .home-buttons {
+                display: grid;
+                gap: 5px;
+                justify-items: end
+            }
+
+            .pill {
+                background: var(--green);
+                color: #052417!important;
+                border: 1px solid transparent;
+                border-radius: 100px;
+                min-height: 33px;
+                padding: 4px 10px;
+                font-size: 11px;
+                font-weight: 700;
+                white-space: nowrap
+            }
+
+            .pill:hover {
+                filter: brightness(1.12)
+            }
+
+            .pill.outline {
+                background: transparent;
+                color: var(--green)!important;
+                border-color: #79a58d
+            }
+
+            .pill.text {
+                background: transparent;
+                color: #86dfb0!important
+            }
+
+            .app-note {
+                background: var(--surface2);
+                border-radius: 9px;
+                padding: 9px;
+                margin: 9px 0
+            }
+
+            .empty {
+                display: grid;
+                align-content: center;
+                text-align: center;
+                flex: 1;
+                padding-bottom: 34px
+            }
+
+            .empty strong {
+                font-size: 17px;
+                font-weight: 600
+            }
+
+            .empty small {
+                margin-top: 7px;
+                line-height: 1.45
+            }
+
+            .server-card {
+                border-radius: 10px;
+                padding: 10px;
+                background: var(--surface);
+                margin-bottom: 7px
+            }
+
+            .server-ident {
+                display: flex;
+                gap: 8px;
+                align-items: center
+            }
+
+            .server-ident>div:nth-child(2),.server-ident>div:nth-child(1):not(.server-icon) {
+                flex: 1;
+                min-width: 0
+            }
+
+            .server-ident strong,.server-ident small {
+                display: block;
+                overflow-wrap: anywhere
+            }
+
+            .server-ident strong {
+                font-size: 14px
+            }
+
+            .server-icon {
+                height: 39px;
+                width: 39px;
+                border-radius: 11px;
+                display: grid;
+                place-items: center;
+                background: #195238;
+                color: #a2e3bd;
+                font-size: 16px;
+                font-weight: 770;
+                flex: none
+            }
+
+            .server-icon .icon {
+                width: 20px;
+                height: 20px
+            }
+
+            .server-card .server-icon {
+                width: 44px;
+                height: 44px
+            }
+
+            .mon {
+                font-size: 11px;
+                font-weight: 700;
+                color: var(--appmuted);
+                flex: none
+            }
+
+            .mon.on {
+                color: #79e8ac
+            }
+
+            .server-card p {
+                margin: 5px 0 8px
+            }
+
+            .app-actions {
+                display: flex;
+                gap: 3px
+            }
+
+            .app-actions button:first-child {
+                flex: 1
+            }
+
+            .server-top {
+                flex: none;
+                padding: 5px 7px 7px 11px;
+                background: var(--surface)
+            }
+
+            .server-top .app-btn {
+                width: 31px;
+                height: 33px
+            }
+
+            .ChannelDetails {
+                min-height: 73px;
+                margin: 7px 8px 5px;
+                border-radius: 9px;
+                background: #153828;
+                padding: 10px 45px 10px 11px;
+                position: relative;
+                flex: none
+            }
+
+            .ChannelDetails.practice-art {
+                background: radial-gradient(ellipse at 85% 25%,#3c775345,transparent 80%),linear-gradient(145deg,#203e37,#0f261f 72%)
+            }
+
+            .ChannelDetails h3 {
+                font-size: 16px;
+                margin: 0 0 4px
+            }
+
+            .ChannelDetails p {
+                font-size: 11px;
+                line-height: 1.4;
+                color: var(--appmuted)
+            }
+
+            .ChannelDetails .app-btn {
+                position: absolute;
+                right: 4px;
+                top: 4px;
+                color: #89e3b4
+            }
+
+            .tree {
+                padding: 3px 6px 10px;
+                flex: 1
+            }
+
+            .channel-wrap {
+                display: flex;
+                position: relative;
+                border-bottom: 1px solid #19392a;
+                min-height: 37px;
+                border-radius: 4px
+            }
+
+            .channel-wrap.active {
+                background: #185239
+            }
+
+            .channel-wrap.selected {
+                background: #143426
+            }
+
+            .channel-wrap:nth-child(3n+2):not(.active):not(.selected) {
+                background: #ffffff02
+            }
+
+            .expand,.row-action,.channel {
+                border: 0;
+                background: none
+            }
+
+            .channel {
+                display: flex;
+                flex: 1;
+                gap: 6px;
+                align-items: center;
+                min-height: 36px;
+                text-align: left;
+                padding: 8px 7px 7px 28px;
+                font-size: 13px;
+                font-weight: 640;
+                touch-action: manipulation;
+                border-radius: 4px;
+                min-width: 0
+            }
+
+            .channel:hover {
+                background: #ffffff0e
+            }
+
+            .channel.nested {
+                padding-left: 41px
+            }
+
+            .channel .count {
+                margin-left: auto;
+                color: var(--appmuted);
+                font-size: 11px
+            }
+
+            .channel .chevron,.tree-mark {
+                color: var(--green)
+            }
+
+            .channel .icon {
+                width: 13px;
+                height: 13px
+            }
+
+            .expand {
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                padding: 0;
+                height: 31px;
+                width: 22px;
+                color: #73dca3!important
+            }
+
+            .divider-row {
+                font-size: 10px;
+                letter-spacing: .11em;
+                color: var(--appmuted);
+                text-align: center;
+                margin: 7px 0 4px
+            }
+
+            .member {
+                display: flex;
+                align-items: center;
+                min-height: 32px
+            }
+
+            .row-action {
+                flex: 1;
+                display: flex;
+                min-width: 0;
+                text-align: left;
+                align-items: center;
+                gap: 7px;
+                border-radius: 4px;
+                min-height: 32px;
+                padding: 3px 5px 3px 25px;
+                font-size: 12px
+            }
+
+            .row-action.nested {
+                padding-left: 42px
+            }
+
+            .avatar {
+                width: 23px;
+                height: 23px;
+                display: grid;
+                place-items: center;
+                border-radius: 100%;
+                background: #31544b;
+                color: #c1eddd;
+                font-weight: 700;
+                font-size: 11px;
+                flex: none
+            }
+
+            .avatar.speaking {
+                outline: 2px solid #66e9a4;
+                outline-offset: 0
+            }
+
+            .avatar.blue {
+                background: #324d66;
+                color: #d3e3f6
+            }
+
+            .avatar.gold {
+                background: #574934;
+                color: #f4e6c4
+            }
+
+            .member-name {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                flex: 1
+            }
+
+            .member .flag {
+                background: #25323c;
+                border: 1px solid #697c79;
+                padding: 1px 4px;
+                border-radius: 5px;
+                font-size: 10px;
+                white-space: nowrap
+            }
+
+            .member .app-btn {
+                width: 30px;
+                height: 29px;
+                color: #84d6ac
+            }
+
+            .dock-wrap {
+                background: #131418;
+                padding: 5px 5px 3px;
+                flex: none
+            }
+
+            .dock {
+                background: #202127;
+                color: #f3f4f5;
+                border-radius: 23px;
+                display: flex;
+                align-items: center;
+                gap: 3px;
+                padding: 6px 7px;
+                min-height: 51px
+            }
+
+            .dock>.avatar {
+                width: 31px;
+                height: 31px;
+                background: #303b39;
+                margin-right: 4px
+            }
+
+            .dock-copy {
+                flex: 1;
+                min-width: 0;
+                font-size: 11px
+            }
+
+            .dock-copy strong,.dock-copy small {
+                display: block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap
+            }
+
+            .dock-copy small {
+                font-size: 9px;
+                color: #c0c3cc;
+                margin-top: 3px;
+                line-height: 1.3
+            }
+
+            .dock .app-btn {
+                width: 29px;
+                height: 32px;
+                color: #bbc0c9
+            }
+
+            .dock .app-btn .icon {
+                height: 17px;
+                width: 17px
+            }
+
+            .dock .muted,.dock .active-stream {
+                color: #f08c97
+            }
+
+            .ptt {
+                border: 0;
+                border-radius: 7px;
+                background: #36383f;
+                min-width: 52px;
+                height: 31px;
+                font-size: 11px;
+                font-weight: 800;
+                touch-action: none;
+                user-select: none
+            }
+
+            .ptt[aria-pressed=true] {
+                background: #45c486;
+                color: #061e12
+            }
+
+            .meter {
+                display: flex;
+                align-items: end;
+                gap: 2px;
+                width: 40px;
+                height: 20px
+            }
+
+            .meter b {
+                width: 3px;
+                background: #33895d;
+                border-radius: 4px
+            }
+
+            .modals {
+                position: absolute;
+                inset: 0;
+                display: grid;
+                place-items: center;
+                z-index: 4;
+                background: #020c08a9;
+                padding: 13px
+            }
+
+            .app-modal {
+                background: #153429;
+                width: 100%;
+                max-height: 91%;
+                border-radius: 22px;
+                display: flex;
+                flex-direction: column;
+                box-shadow: 0 8px 25px #0008;
+                padding: 16px 13px 8px
+            }
+
+            .app-modal.compact {
+                width: 89%
+            }
+
+            .app-modal.tall {
+                max-height: 93%
+            }
+
+            .app-modal h3 {
+                font-size: 19px;
+                font-weight: 600;
+                margin: 0 3px 11px
+            }
+
+            .modal-body {
+                padding: 3px 3px 4px;
+                display: grid;
+                gap: 11px
+            }
+
+            .modal-body .app-note {
+                margin: 0
+            }
+
+            .modal-actions {
+                display: flex;
+                justify-content: flex-end;
+                gap: 5px;
+                margin-top: 7px
+            }
+
+            .field {
+                display: grid;
+                gap: 4px;
+                color: var(--appmuted);
+                font-size: 10px
+            }
+
+            .field input,.field textarea,.field select,.compose input {
+                border: 1px solid #7d9a8a;
+                background: transparent;
+                border-radius: 4px;
+                color: var(--apptext);
+                padding: 8px 7px;
+                width: 100%;
+                min-width: 0;
+                font-size: 13px
+            }
+
+            .field textarea {
+                resize: vertical;
+                min-height: 56px
+            }
+
+            .field input:disabled {
+                opacity: .71
+            }
+
+            .field small {
+                line-height: 1.3;
+                font-size: 10px
+            }
+
+            .switch-row {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                font-size: 12px;
+                line-height: 1.35
+            }
+
+            .switch-row small {
+                margin-top: 2px
+            }
+
+            .switch-row input {
+                appearance: none;
+                flex: none;
+                width: 32px;
+                height: 19px;
+                margin: 0;
+                position: relative;
+                border: 1px solid #88a699;
+                border-radius: 20px;
+                background: #243d33;
+                cursor: pointer
+            }
+
+            .switch-row input::after {
+                content: '';
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                border-radius: 50%;
+                height: 11px;
+                width: 11px;
+                background: #a8c8b8
+            }
+
+            .switch-row input:checked {
+                background: var(--green);
+                border-color: var(--green)
+            }
+
+            .switch-row input:checked::after {
+                left: 16px;
+                background: #0a3a25
+            }
+
+            .form-error {
+                font-size: 11px;
+                color: #ffb9b5
+            }
+
+            .settings-title {
+                margin: 0;
+                font-size: 14px;
+                border-top: 1px solid #527262;
+                padding-top: 8px
+            }
+
+            .segment {
+                display: flex
+            }
+
+            .segment button {
+                background: transparent;
+                border: 1px solid #7d9a8a;
+                padding: 6px;
+                font-size: 12px;
+                flex: 1;
+                border-radius: 0
+            }
+
+            .segment button:first-child {
+                border-radius: 100px 0 0 100px
+            }
+
+            .segment button:last-child {
+                border-radius: 0 100px 100px 0
+            }
+
+            .segment button[aria-pressed=true] {
+                background: #2b684b
+            }
+
+            .modal-menu-btn {
+                border: 0;
+                background: transparent;
+                text-align: left;
+                border-radius: 6px;
+                padding: 7px 5px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 12px;
+                width: 100%;
+                min-height: 34px
+            }
+
+            .modal-menu-btn .icon {
+                width: 17px;
+                height: 17px;
+                color: #8bdfb0
+            }
+
+            .modal-menu-btn:hover {
+                background: #ffffff13
+            }
+
+            .slider {
+                width: 100%;
+                accent-color: var(--green)
+            }
+
+            .chat {
+                position: absolute;
+                inset: 0;
+                z-index: 3;
+                display: flex;
+                flex-direction: column;
+                background: var(--app)
+            }
+
+            .chat-head {
+                background: var(--surface);
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 8px;
+                border-bottom: 1px solid #305344
+            }
+
+            .chat-head div {
+                flex: 1
+            }
+
+            .chat-head strong {
+                font-size: 15px
+            }
+
+            .chat-log {
+                min-height: 0;
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                overflow: auto;
+                padding: 12px 9px
+            }
+
+            .chat-log div {
+                padding: 7px 9px;
+                border-radius: 10px;
+                background: #18382b;
+                align-self: flex-start;
+                max-width: 88%;
+                overflow-wrap: anywhere
+            }
+
+            .chat-log div.mine {
+                background: #1d5b3e;
+                align-self: flex-end
+            }
+
+            .chat-log b {
+                font-size: 10px;
+                color: #aef1c9
+            }
+
+            .chat-log p {
+                font-size: 12px;
+                margin-top: 3px
+            }
+
+            .compose {
+                display: flex;
+                gap: 4px;
+                padding: 8px
+            }
+
+            .compose .app-btn {
+                color: var(--green)
+            }
+
+            .viewer {
+                position: absolute;
+                inset: 0;
+                z-index: 3;
+                background: #030807;
+                display: flex;
+                flex-direction: column;
+                justify-content: center
+            }
+
+            .viewer-toggle {
+                border: 0;
+                padding: 0;
+                position: absolute;
+                inset: 0;
+                background: transparent;
+                display: grid;
+                place-items: center
+            }
+
+            .sample-video {
+                display: grid;
+                width: 100%;
+                aspect-ratio: 16/9;
+                padding: 12px;
+                grid-template-columns: 1fr 3fr;
+                gap: 7px;
+                background: #102827;
+                text-align: left;
+                pointer-events: none
+            }
+
+            .sample-video .sample-sidebar {
+                background: repeating-linear-gradient(#284c45 0 3px,transparent 3px 10px);
+                border-right: 5px solid #102827;
+                opacity: .8
+            }
+
+            .sample-video .sample-content {
+                background: repeating-linear-gradient(90deg,#ffffff0b 0 1px,transparent 1px 15px),repeating-linear-gradient(#ffffff0b 0 1px,transparent 1px 15px),#1c3a32;
+                padding: 17px 10px;
+                font-size: 15px;
+                font-weight: 770;
+                color: #caefcf
+            }
+
+            .sample-video small {
+                display: block;
+                margin-top: 4px;
+                font-size: 9px;
+                color: #a9ceb6
+            }
+
+            .viewer-head,.viewer .dock-wrap {
+                position: absolute;
+                left: 0;
+                right: 0
+            }
+
+            .viewer-head {
+                top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 7px 9px;
+                background: #000a;
+                font-size: 12px
+            }
+
+            .viewer .dock-wrap {
+                bottom: 0
+            }
+
+            .toast {
+                position: absolute;
+                z-index: 6;
+                bottom: 7px;
+                left: 12px;
+                right: 12px;
+                background: #e0f3e8;
+                color: #123526;
+                border-radius: 8px;
+                padding: 8px;
+                font-size: 11px;
+                pointer-events: none
+            }
+
+            .hint-target {
+                position: relative;
+                outline: 2px solid #b0ffcc!important;
+                outline-offset: -2px!important;
+                box-shadow: 0 0 14px #71ff9f99!important;
+                z-index: 1;
+                animation: hint-in .35s ease-out
+            }
+
+            @keyframes hint-in {
+                from {
+                    box-shadow: 0 0 0 5px #71ff9f66
+                }
+
+                to {
+                    box-shadow: 0 0 14px #71ff9f99
+                }
+            }
+
+            footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 17px 0 24px;
+                color: #506557;
+                font-size: 11px
+            }
+
+            footer a {
+                text-decoration: none
+            }
+
+            footer a:hover {
+                text-decoration: underline
+            }
+
+            footer .icon {
+                width: 12px;
+                height: 12px
+            }
+
+            @media(max-width: 900px) {
+                .wrap {
+                    padding:0 20px
+                }
+
+                .lesson {
+                    padding: 19px;
+                    gap: 16px
+                }
+
+                .stage {
+                    padding-inline:12px}
+            }
+
+            @media(max-width: 690px) {
+                .wrap {
+                    padding:0 13px
+                }
+
+                .top .wrap {
+                    height: 59px
+                }
+
+                .brand-caption,.brand-divider {
+                    display: none
+                }
+
+                .top-tools {
+                    gap: 7px
+                }
+
+                .repository {
+                    padding: 5px 8px
+                }
+
+                .intro {
+                    padding-top: 24px;
+                    padding-bottom: 17px
+                }
+
+                h1 {
+                    letter-spacing: -.055em
+                }
+
+                .intro p:last-child {
+                    font-size: 14px;
+                    margin-top: 8px
+                }
+
+                .workspace {
+                    grid-template-columns: minmax(0,1fr);
+                    border-radius: 17px
+                }
+
+                .lesson {
+                    display: contents
+                }
+
+                .navigation,.step-meta-wrap,.step-copy,.context,.step-actions,.lesson-bottom {
+                    grid-column: 1;
+                    margin-inline:13px}
+
+                .navigation {
+                    margin-top: 12px;
+                    grid-row: 1
+                }
+
+                .step-meta-wrap {
+                    grid-row: 2;
+                    margin-top: 11px
+                }
+
+                .step-copy {
+                    grid-row: 3;
+                    margin-top: 12px
+                }
+
+                .step-copy h2 {
+                    margin-bottom: 6px;
+                    font-size: 26px
+                }
+
+                .step-copy p {
+                    font-size: 14px
+                }
+
+                .context {
+                    grid-row: 4;
+                    margin-top: 9px;
+                    font-size: 12px;
+                    padding: 7px
+                }
+
+                .step-actions {
+                    grid-row: 5;
+                    margin-top: 6px;
+                    margin-bottom: 7px;
+                    min-height: 0
+                }
+
+                .step-actions button {
+                    min-height: 34px
+                }
+
+                .lesson-bottom {
+                    grid-row: 7;
+                    margin-top: 8px;
+                    margin-bottom: 9px;
+                    gap: 2px
+                }
+
+                .bottom-links {
+                    padding-top: 4px
+                }
+
+                .stage {
+                    grid-row: 6;
+                    border-left: 0;
+                    border-top: 1px solid var(--line);
+                    padding-top: 8px;
+                    padding-bottom: 8px
+                }
+
+                .stage-caption {
+                    font-size: 10px
+                }
+
+                .device {
+                    height: clamp(470px,79svh,560px);
+                    margin: 6px 0
+                }
+
+                .chapter {
+                    min-height: 32px;
+                    font-size: 10px
+                }
+
+                .stage-top {
+                    font-size: 10px
+                }
+
+                .stage-current {
+                    display: inline;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap
+                }
+
+                .stage-title {
+                    flex: none
+                }
+
+                .stage-badge {
+                    display: none
+                }
+
+                .stage[data-preview=true] .stage-badge {
+                    display: inline;
+                    flex: none
+                }
+
+                .stage[data-preview=true] .stage-title {
+                    display: none
+                }
+
+                .workspace.is-complete .step-actions {
+                    grid-row: 7;
+                    margin-top: 10px
+                }
+
+                .workspace.is-complete .lesson-bottom {
+                    grid-row: 8
+                }
+
+                footer {
+                    padding: 11px 1px 18px;
+                    line-height: 1.35
+                }
+            }
+
+            @media(max-width: 355px) {
+                .top-tools .repository span {
+                    display:none
+                }
+
+                .brand {
+                    font-size: 15px
+                }
+
+                .device {
+                    border-width: 5px
+                }
+
+                .stage {
+                    padding-inline:6px}
+
+                .home {
+                    padding-inline:8px}
+
+                .pill {
+                    padding-inline:7px}
+            }
+
+            @media(prefers-reduced-motion:reduce) {
+                *,*::before,*::after {
+                    animation: none!important;
+                    scroll-behavior: auto!important
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header class="top">
+            <div class="wrap">
+                <a class="brand" href="#connect" id="brand">
+                    <img alt="" data-logo>
+                    <span>TS3X Client</span>
+                    <i class="brand-divider" aria-hidden="true"></i>
+                    <span class="brand-caption" data-text="brand"></span>
+                </a>
+                <div class="top-tools">
+                    <div class="lang" aria-label="Language">
+                        <button type="button" data-lang="ru">RU</button>
+                        <button type="button" data-lang="en">EN</button>
+                    </div>
+                    <a class="repository" href="https://github.com/ravenmsc/ts3x-client" data-icon="github">
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+        <main class="wrap">
+            <div class="intro">
+                <p class="eyebrow" data-icon="android">
+                    <span data-text="version"></span>
+                </p>
+                <h1 data-text="heading"></h1>
+                <p data-text="lead"></p>
+            </div>
+            <div class="workspace">
+                <section class="lesson" aria-labelledby="step-title">
+                    <nav class="navigation" id="navigation"></nav>
+                    <div class="step-meta-wrap">
+                        <div class="step-meta">
+                            <span id="step-meta" aria-live="polite"></span>
+                            <span class="mode" id="step-mode"></span>
+                        </div>
+                        <div class="progress" id="progress" aria-hidden="true"></div>
+                    </div>
+                    <div class="step-copy">
+                        <h2 id="step-title" tabindex="-1"></h2>
+                        <p id="step-description"></p>
+                    </div>
+                    <div class="context" id="context"></div>
+                    <div class="step-actions" id="step-actions"></div>
+                    <div class="lesson-bottom">
+                        <p class="status" id="status" role="status" aria-atomic="true"></p>
+                        <div class="bottom-links" id="bottom-links"></div>
+                    </div>
+                </section>
+                <section class="stage" aria-label="Android simulator">
+                    <div class="stage-top">
+                        <span class="stage-title" data-icon="smartphone">
+                            <span data-text="simulator"></span>
+                        </span>
+                        <a class="stage-current" id="stage-current" href="#step-title"></a>
+                        <span class="stage-badge" id="stage-badge"></span>
+                    </div>
+                    <div class="device" id="device">
+                        <div class="os" aria-hidden="true">
+                            <span>14:37</span>
+                            <span class="os-right">
+                                <span data-icon="wifi"></span>
+                                <span data-icon="signal"></span>
+                                <span data-icon="battery"></span>
+                            </span>
+                        </div>
+                        <div class="app-view" id="app-view"></div>
+                        <div class="os-bottom" aria-hidden="true">
+                            <i></i>
+                        </div>
+                    </div>
+                    <p class="stage-caption" data-text="local"></p>
+                </section>
+            </div>
+            <footer>
+                <span data-text="footer"></span>
+                <a href="https://github.com/ravenmsc/ts3x-client/releases">
+                    <span data-text="releases"></span>
+                    <span data-icon="external"></span>
+                </a>
+            </footer>
+        </main>
+        <script>
+            'use strict';
+            // App icon from the TS3X Client repository (Apache-2.0).
+            const logo = 'data:image/png;base64,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';
+            const icons = {
+                external: '<path d="M14 5h5v5m0-5-8 8m6 0v6H5V7h6"/>',
+                android: '<path d="m7 6-2-3m12 3 2-3M3 17v-3a9 9 0 0 1 18 0v3ZM8 12h.01M16 12h.01"/>',
+                smartphone: '<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4"/>',
+                info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/>',
+                mouse: '<rect x="6" y="3" width="12" height="18" rx="6"/><path d="M12 7v4"/>',
+                bulb: '<path d="M9 18h6m-5 3h4m-2-18a6 6 0 0 0-4 10.5c.7.7 1 1.4 1 2.5h6c0-1.1.3-1.8 1-2.5A6 6 0 0 0 12 3Z"/>',
+                check: '<path d="m5 12 4 4L19 6"/>',
+                right: '<path d="M4 12h15m-6-6 6 6-6 6"/>',
+                left: '<path d="M20 12H5m6-6-6 6 6 6"/>',
+                reset: '<path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"/>',
+                github: '<path d="M9 19c-4.5 1.5-4.5-2.5-6-3m12 6v-3.9a3.4 3.4 0 0 0-.9-2.6c3-.3 5.9-1.5 5.9-6a4.8 4.8 0 0 0-1.3-3.3A4.5 4.5 0 0 0 18.6 3S17.4 2.7 15 4.4a13 13 0 0 0-6 0C6.6 2.7 5.4 3 5.4 3a4.5 4.5 0 0 0-.1 3.3A4.8 4.8 0 0 0 4 9.6c0 4.4 2.9 5.6 5.9 6a3.4 3.4 0 0 0-.9 2.6V22"/>',
+                gear: '<circle cx="12" cy="12" r="3"/><path d="M10 3h4l.6 2.7 1.4.8 2.7-.8 2 3.5-2 1.9v1.8l2 1.9-2 3.5-2.7-.8-1.4.8L14 21h-4l-.6-2.7-1.4-.8-2.7.8-2-3.5 2-1.9v-1.8l-2-1.9 2-3.5 2.7.8 1.4-.8Z"/>',
+                share: '<circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="5" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.5-4.4m-7.5 6.8 7.5 4.4"/>',
+                exit: '<path d="M11 4H5v16h6m-1-8h11m-4-4 4 4-4 4"/>',
+                mic: '<rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1m-7 8v4m-3 0h6"/>',
+                micOff: '<path d="m3 3 18 18M9 9v3a3 3 0 0 0 5.1 2.1M9 5a3 3 0 0 1 6 .5v5.6M5 10v1a7 7 0 0 0 11.9 5M19 10v1c0 .9-.1 1.7-.4 2.5M12 18v4"/>',
+                chat: '<path d="M21 4H3v13h4v4l5-4h9Z"/><path d="M7 9h10m-10 4h6"/>',
+                send: '<path d="m3 4 18 8-18 8 4-8Zm4 8h14"/>',
+                close: '<path d="m6 6 12 12M18 6 6 18"/>',
+                lock: '<rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/>',
+                headset: '<path d="M3 13v-1a9 9 0 0 1 18 0v1M3 12h3a2 2 0 0 1 2 2v5H6a3 3 0 0 1-3-3Zm18 0h-3a2 2 0 0 0-2 2v5h2a3 3 0 0 0 3-3Z"/>',
+                wifi: '<path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0m-4 4h.01"/>',
+                signal: '<path d="M4 20h16V4Z" fill="currentColor" stroke="none"/>',
+                battery: '<rect x="4" y="6" width="15" height="12" rx="2"/><path d="M22 9v6M7 9h9v6H7Z" fill="currentColor"/>',
+                screen: '<rect x="2" y="4" width="20" height="14" rx="2"/><path d="M9 21h6m-3-9 4-4m-4 0h4v4"/>',
+                volume: '<path d="M3 9h4l5-4v14l-5-4H3Zm13-1a6 6 0 0 1 0 8m2-10a9 9 0 0 1 0 12"/>',
+                poke: '<path d="M10 12V5a2 2 0 1 1 4 0v5l4 1a3 3 0 0 1 2 3l-1 5H9l-4-5a2 2 0 0 1 3-2l2 2Z"/>',
+                group: '<circle cx="10" cy="8" r="3"/><path d="M3 20v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2m0-15a3 3 0 0 1 0 6m3 9v-2a5 5 0 0 0-2-4"/>',
+                clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+                copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 5V4H4v12h1"/>'
+            };
+            function icon(name) {
+                return `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name]}</svg>`;
+            }
+            function words(ru, en) {
+                return {
+                    ru,
+                    en
+                };
+            }
+            const text = {
+                brand: words('Руководство', 'User Guide'),
+                version: words('Android · версия 0.10.2', 'Android · version 0.10.2'),
+                heading: words('Руководство по UI для TS3X Client', 'TS3X Client App UI Guide'),
+                lead: words('Пройдите основные сценарии в интерактивном приложении.', 'Try the essential workflows in an interactive app.'),
+                simulator: words('Модель UI', 'App UI Model'),
+                demo: words('Режим обучения', 'Practice mode'),
+                local: words('Пример отображения серверов, участников и сообщений.', 'Servers, participants and messages samples.'),
+                footer: words('TS3X Client — неофициальный клиент для TeamSpeak 3 и 6.', 'TS3X Client is an unofficial client for TeamSpeak 3 and 6.'),
+                releases: words('Релизы на GitHub', 'GitHub Releases'),
+                lessonNav: words('Разделы руководства', 'Guide topics'),
+                action: words('Действие в приложении', 'Try it in the app'),
+                hint: words('Подсветить элемент', 'Highlight control'),
+                hideHint: words('Скрыть подсветку', 'Hide highlight'),
+                sample: words('Вставить пример', 'Insert example'),
+                restart: words('Заново', 'Restart'),
+                previous: words('Предыдущий урок', 'Previous lesson'),
+                overview: words('К первому уроку', 'First lesson'),
+                next: words('Следующий урок', 'Next lesson'),
+                done: words('Урок пройден', 'Lesson complete'),
+                progressSaved: words('Урок отмечен как пройденный.', 'Lesson marked complete.'),
+                selectHint: words('Показан элемент для текущего шага.', 'Current control highlighted.'),
+                add: words('+ Добавить', '+ Add'),
+                saved: words('Сохранённые серверы', 'Saved servers'),
+                invite: words('Ссылка-приглашение', 'Invite Link'),
+                edit: words('Изменить', 'Edit'),
+                delete: words('Удалить', 'Delete'),
+                connect: words('Подключиться', 'Connect'),
+                disconnect: words('Отключиться', 'Disconnect'),
+                nickname: words('Никнейм', 'Nickname'),
+                listNickname: words('Никнейм пользователя', 'Client Nickname'),
+                monitorExplain: words('При включённом мониторинге вы будете получать уведомления о подключении пользователей.', 'If online status monitoring is enabled, you will be notified when users connect.'),
+                empty: words('Нет сохранённых серверов', 'No saved servers'),
+                emptyText: words('Добавьте сервер для подключения.', 'Add a server to connect.'),
+                addTitle: words('Add TeamSpeak server', 'Add TeamSpeak server'),
+                editTitle: words('Edit TeamSpeak server', 'Edit TeamSpeak server'),
+                name: words('Имя сервера (необязательно)', 'Server Name (optional)'),
+                host: words('Хост / IP', 'Host / IP'),
+                hostHint: words('Домен или IP, при необходимости с :портом. Для IPv6: [адрес]:порт.', 'Hostname or IP, optionally with :port. For IPv6 use [address]:port.'),
+                port: words('UDP-порт', 'UDP port'),
+                portFrom: words('Используется порт из поля Host', 'Using the port specified in Host'),
+                password: words('Пароль сервера (необязательно)', 'Server password (optional)'),
+                monitor: words('Включить мониторинг', 'Enable monitoring'),
+                monitorBrief: words('Проверка онлайн-статуса пользователей на сервере', 'Periodic background users online status checking'),
+                monitorIds: words('ID отслеживаемых каналов', 'Monitored channel IDs'),
+                monitorAll: words('Пусто = все каналы.', 'Blank = all channels.'),
+                monitoring: words('Мониторинг', 'Monitoring'),
+                monOff: words('Мониторинг отключён', 'Online monitoring disabled'),
+                save: words('Сохранить', 'Save'),
+                cancel: words('Отмена', 'Cancel'),
+                close: words('Закрыть', 'Close'),
+                back: words('Назад', 'Back'),
+                importTitle: words('Добавить сервер по ссылке', 'Add server from invite link'),
+                importExplain: words('Вставьте ссылку-приглашение TS3X. Сервер появится в сохранённых серверах.', 'Paste a TS3X invite link. The server will be added to Saved servers.'),
+                import: words('Добавить сервер', 'Add server'),
+                invalidHost: words('Введите корректный адрес и UDP-порт от 1 до 65535.', 'Enter a valid address and a UDP port between 1 and 65535.'),
+                invalidInvite: words('Вставьте образец ссылки из примера или ссылку TS3X с адресом сервера.', 'Use the sample invite or a TS3X invite containing a server address.'),
+                settings: words('Настройки', 'Settings'),
+                audioSettings: words('Настройки звука', 'Audio settings'),
+                identity: words('Идентификатор и клиент', 'Identity & Client'),
+                audio: words('Аудио', 'Audio'),
+                audioIn: words('Микрофон / устройство ввода', 'Microphone / input device'),
+                audioOut: words('Воспроизведение / устройство вывода', 'Playback / communication device'),
+                default: words('По умолчанию', 'Default'),
+                interval: words('Интервал обновления онлайн-статуса', 'Online-status refresh interval'),
+                mute: words('Выключить микрофон', 'Mute'),
+                unmute: words('Включить микрофон', 'Unmute'),
+                muted: words('Микрофон заглушен', 'Microphone muted'),
+                push: words('Активация по нажатию', 'Push to talk'),
+                voice: words('Активация голосом', 'Voice activation'),
+                transmitting: words('Передача', 'Transmitting'),
+                shareServer: words('Поделиться сервером', 'Share server'),
+                channelChat: words('Чат канала', 'Channel chat'),
+                channelMessages: words('Сообщения канала', 'Channel messages'),
+                privateMessages: words('Личные сообщения', 'Private messages'),
+                messages: words('Сообщения', 'Messages'),
+                send: words('Отправить', 'Send'),
+                message: words('Сообщение', 'Message'),
+                joinToSend: words('Войдите в канал, чтобы отправлять сообщения.', 'Join this channel to send messages.'),
+                poke: words('Толкнуть', 'Poke'),
+                volume: words('Регулировать громкость', 'Adjust volume'),
+                connectionInfo: words('Информация о подключении', 'Connection information'),
+                permissions: words('Разрешения', 'Permissions'),
+                groups: words('Группы сервера', 'Server groups'),
+                channelGroups: words('Группы канала', 'Channel groups'),
+                unavailable: words('Нет данных', 'Unavailable'),
+                apply: words('Применить', 'Apply'),
+                awayToggle: words('Состояние «Отошёл»', 'Toggle away status'),
+                away: words('Отошёл (AFK)', 'Away (AFK)'),
+                awayMessage: words('Сообщение об отсутствии', 'Away message'),
+                awayExample: words('Скоро вернусь', 'Back soon'),
+                shareScreen: words('Демонстрация экрана', 'Share screen'),
+                stopScreen: words('Остановить демонстрацию', 'Stop screen sharing'),
+                watch: words('Смотреть трансляцию', 'Watch stream'),
+                watchClose: words('Закрыть трансляцию', 'Close stream'),
+                capture: words('Начать запись или трансляцию экрана?', 'Start recording or casting your screen?'),
+                captureInfo: words('Приложение Android запрашивает разрешение на захват экрана.', 'The App requests for screen capture permission here.'),
+                start: words('Начать', 'Start now'),
+                sampleFrame: words('Образец экрана', 'Screen sample'),
+                tapStream: words('Показать или скрыть панель', 'Show or hide controls'),
+                stageLabel: words('Модель Android', 'Android Model'),
+                systemShare: words('Ссылка на пример сервера', 'Sample server link'),
+                removed: words('Сервер удалён из списка.', 'Server removed from the list.'),
+                display: words('Пример сервера', 'Practice server'),
+                lounge: words('Гостиная', 'Lounge'),
+                welcome: words('Общая комната сервера', 'The server’s common room'),
+                gaming: words('Команды', 'Squads'),
+                gamingNote: words('Канал для командных игр', 'Channel for team games'),
+                squad: words('Комната 1', 'Room 1'),
+                quietRoom: words('Тихая комната', 'Quiet room'),
+                afkRoom: words('Перерыв', 'Break room'),
+                sections: words('ГОЛОСОВЫЕ КАНАЛЫ', 'VOICE CHANNELS'),
+                greeting: words('Привет! Мы уже в канале.', 'Hi! We’re already in the channel.'),
+                messageExample: words('Всем привет!', 'Hello, everyone!'),
+                privateExample: words('Привет, Nova!', 'Hi, Nova!'),
+                pokeSent: words('Poke отправлен.', 'Poke sent.'),
+                approx: words('Учебная сборка', 'Test build')
+            };
+            const str = key => text[key]?.[language] ?? key;
+            const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[char]);
+            function readLocal(key, fallback) {
+                try {
+                    return JSON.parse(localStorage.getItem('ts3x-guide-' + key)) ?? fallback;
+                } catch {
+                    return fallback;
+                }
+            }
+            function writeLocal(key, value) {
+                try {
+                    localStorage.setItem('ts3x-guide-' + key, JSON.stringify(value));
+                } catch {/* The simulator also works without storage. */
+                }
+            }
+            let language = new URLSearchParams(location.search).get('lang');
+            if (!['ru', 'en'].includes(language))
+                language = readLocal('language', 'ru') === 'en' ? 'en' : 'ru';
+            const sampleAddress = 'voice.example.org:9994';
+            const lesson = (id, ru, en, steps, finishRu, finishEn) => ({
+                id,
+                name: words(ru, en),
+                steps,
+                finish: words(finishRu, finishEn)
+            });
+            const entry = (matches, target, ru, en, bodyRu, bodyEn, noteRu, noteEn, sample) => ({
+                matches,
+                target,
+                title: words(ru, en),
+                body: words(bodyRu, bodyEn),
+                note: words(noteRu, noteEn),
+                sample
+            });
+            const lessons = [lesson('connect', 'Сервер', 'Server', [entry('add', 'add', 'Добавьте сервер', 'Add a server', 'Нажмите «+ Добавить» в правом верхнем углу приложения.', 'Select “+ Add” in the upper right of the app.', 'На этом экране можно также открыть настройки и изменить никнейм в разделе «Идентификатор и клиент».', 'You can also open Settings here and change your nickname under “Identity & Client”.'), entry('valid-host', 'host', 'Укажите адрес', 'Enter a server address', 'В поле «Хост / IP» введите голосовой адрес сервера. Попробуйте учебный адрес voice.example.org:9994.', 'In “Host / IP”, enter the voice server address. Try the sample address voice.example.org:9994.', 'Порт из адреса имеет приоритет. Если порт указан отдельно, по умолчанию используется 9987. Пароль нужен только для закрытого сервера.', 'A port in the address takes precedence. The separate port defaults to 9987. Enter a password if your server requires one.', 'host'), entry('save-profile', 'save-profile', 'Сохраните профиль', 'Save the profile', 'Проверьте адрес и нажмите «Сохранить».', 'Check the address and select “Save”.', 'Название помогает различать серверы в списке.', 'A name helps identify the server in your list.'), entry('connect', 'connect', 'Подключитесь', 'Connect', 'Нажмите «Подключиться» на карточке сервера.', 'Select “Connect” on the server card.', 'При первом запуске разрешите доступ к микрофону для голосовой связи и уведомления для фоновых событий.', 'On first launch, grant microphone access for voice and notification access for background events.')], 'Вы сохранили профиль и открыли дерево каналов.', 'You saved a profile and opened the channel tree.'), lesson('invite', 'Приглашение', 'Invite', [entry('invite', 'invite', 'Откройте приглашение', 'Open an invite', 'На экране сохранённых серверов нажмите «Ссылка-приглашение».', 'On the “Saved servers” screen, select “Invite Link”.', 'В приложении можно импортировать ссылки TS3X и поддерживаемые ссылки tmspk.gg.', 'The app can import TS3X links and supported tmspk.gg invitations.'), entry('valid-invite', 'invite-value', 'Вставьте ссылку', 'Paste the invite link', 'Воспользуйтесь кнопкой «Вставить пример» или введите учебную ссылку в поле.', 'Use “Insert example” or enter the sample link in the field.', 'Ссылки с паролем передают данные для входа. Делитесь ими только с теми, кому нужен доступ.', 'Invite links that include a password carry the server credentials. Share them with the intended participants.', 'invite'), entry('import', 'import', 'Добавьте сервер из ссылки', 'Import the server', 'Нажмите «Добавить сервер» и найдите импортированный профиль в списке.', 'Select “Add server” and find the imported profile in the list.', 'После импорта для входа используйте кнопку «Подключиться» на карточке.', 'To join after importing, select “Connect” on the server card.')], 'Сервер из приглашения появился в списке.', 'The invited server is now in your list.'), lesson('channels', 'Каналы', 'Channels', [entry('preview', 'channel-gaming', 'Откройте сведения о канале', 'Preview a channel', 'Один раз нажмите «Команды». Над деревом появится описание канала.', 'Select “Squads” once. Its description appears above the channel tree.', 'Точка отмечает канал, в котором вы находитесь. Выбранный для просмотра канал может быть другим.', 'The dot marks your current channel. You can preview another channel while remaining in the current one.'), entry('join', 'channel-gaming', 'Войдите в канал', 'Join a channel', 'Дважды быстро нажмите «Команды», чтобы войти. С клавиатуры нажмите Enter дважды.', 'Double-click or double-tap “Squads” to join. With a keyboard, press Enter twice.', 'Если канал закрыт, приложение предложит ввести пароль.', 'If the channel is locked, the app prompts for a password.'), entry('collapse', 'expand-gaming', 'Сверните вложенные каналы', 'Collapse nested channels', 'Нажмите стрелку слева от «Команды». «Комната 1» скроется.', 'Select the arrow to the left of “Squads”. “Room 1” will collapse.', 'Повторное нажатие снова разворачивает ветку.', 'Select the arrow again to expand the branch.')], 'Вы открыли описание, вошли в канал и свернули ветку.', 'You previewed a channel, joined it and collapsed a branch.'), lesson('voice', 'Голос', 'Voice', [entry('settings', 'audio-settings', 'Откройте настройки звука', 'Open audio settings', 'Нажмите шестерёнку в нижней панели.', 'Select the gear in the bottom control bar.', 'В этом разделе также можно выбрать микрофон и устройство воспроизведения.', 'You can also choose your microphone and playback device here.'), entry('pick-ptt', 'pick-ptt', 'Выберите Push-to-Talk', 'Choose Push-to-Talk', 'Нажмите Push-to-Talk в секции «Аудио».', 'Select Push-to-Talk under “Audio”.', 'В режиме AlwaysOn голос передаётся, когда уровень сигнала превышает заданный порог.', 'In AlwaysOn mode, voice is sent when the signal crosses the activation threshold.'), entry('save-settings', 'save-settings', 'Примените режим', 'Save the audio mode', 'Нажмите «Сохранить». В панели управления появится PTT.', 'Select “Save”. The PTT button appears in the bottom bar.', 'В приложении PTT также может быть доступен через уведомление активной сессии.', 'PTT can also be available from the active session notification.'), entry('ptt', 'ptt', 'Удерживайте PTT', 'Hold Push-to-Talk', 'Зажмите PTT примерно на секунду. Кнопка покажет ON AIR. Отпустите её, чтобы завершить передачу. С клавиатуры удерживайте пробел.', 'Hold PTT for about a second until it shows ON AIR. Release to stop transmitting. With a keyboard, hold Space.', 'Зелёное кольцо вокруг вашего аватара показывает передачу голоса.', 'The green ring around your avatar indicates voice transmission.'), entry('mute', 'mic', 'Выключите микрофон', 'Mute the microphone', 'Нажмите значок микрофона. Повторное нажатие возвращает звук микрофона.', 'Select the microphone icon. Select it again to unmute.', 'В учебном режиме кнопки работают без доступа к микрофону.', 'Practice controls work without accessing your microphone.')], 'Вы настроили PTT, попробовали передачу и отключили микрофон.', 'You set up PTT, tried transmitting and muted your microphone.'), lesson('chat', 'Чат', 'Chat', [entry('chat', 'channel-chat', 'Откройте чат канала', 'Open channel chat', 'Нажмите значок сообщения справа на карточке канала.', 'Select the message icon on the right of the channel card.', 'Чтобы отправить сообщение в канал, сначала войдите в него двойным нажатием.', 'To send a channel message, double-tap the channel to join it first.'), entry('send-channel', 'chat-input', 'Отправьте сообщение', 'Send a channel message', 'Введите текст и нажмите кнопку отправки. Можно воспользоваться кнопкой «Вставить пример».', 'Type a message and select Send. You can also use “Insert example”.', 'Учебное сообщение появится в окне чата.', 'Your practice message will appear in the chat window.', 'message'), entry('close-chat', 'close-chat', 'Вернитесь к списку участников', 'Return to the participant list', 'Закройте чат кнопкой × справа от заголовка.', 'Close chat using the × at the right of the header.', '', ''), entry('member-nova', 'member-nova', 'Откройте меню участника', 'Open a participant’s menu', 'Нажмите на строку Nova в списке участников.', 'Select Nova in the participant list.', '', ''), entry('pm', 'private-chat', 'Перейдите к личным сообщениям', 'Open private messages', 'В меню Nova выберите «Сообщения».', 'Select “Messages” in Nova’s menu.', 'Личные сообщения доступны между участниками подключённого сервера.', 'Private messages are available between participants on the connected server.'), entry('send-private', 'chat-input', 'Отправьте личное сообщение', 'Send a private message', 'Введите сообщение и нажмите кнопку отправки.', 'Type your message and select Send.', '', '', 'private')], 'Вы отправили учебные сообщения в канал и лично Nova.', 'You sent a practice message to the channel and a private message to Nova.'), lesson('people', 'Участники', 'People', [entry('member-nova', 'member-nova', 'Выберите участника', 'Choose a participant', 'Нажмите на строку Nova.', 'Select Nova’s row.', 'В меню доступны Poke, информация о соединении и действия с группами в пределах серверных разрешений.', 'The menu also offers Poke, connection information and group actions, subject to server permissions.'), entry('volume', 'volume', 'Откройте громкость участника', 'Open participant volume', 'Нажмите «Регулировать громкость».', 'Select “Adjust volume”.', 'Настройка действует для выбранного участника.', 'This setting applies to the selected participant.'), entry('volume-changed', 'volume-slider', 'Измените громкость', 'Adjust the volume', 'Передвиньте ползунок, например до 70%.', 'Move the slider, for example to 70%.', 'Кнопка 100% (Reset) возвращает стандартную громкость.', '“100% (Reset)” restores the default volume.'), entry('close-member', 'close-modal', 'Закройте меню', 'Close the menu', 'Нажмите × вверху окна.', 'Select × at the top of the dialog.', '', ''), entry('member-mika', 'member-mika', 'Откройте свой профиль', 'Open your own profile', 'Нажмите на свою строку Mika в текущем канале.', 'Select your own row, Mika, in the current channel.', '', ''), entry('away', 'away', 'Настройте статус AFK', 'Open away status', 'Выберите «Переключить состояние „Отошёл“».', 'Select “Toggle away status”.', '', ''), entry('away-on', 'away-toggle', 'Включите статус «Отошёл»', 'Enable Away', 'Включите переключатель Away (AFK). При желании добавьте короткое сообщение.', 'Turn on Away (AFK). You can also enter a short message.', '', ''), entry('away-save', 'away-save', 'Примените статус', 'Apply your status', 'Нажмите «Применить». Ваша строка покажет статус AFK.', 'Select “Apply”. Your row will show the AFK status.', '', '')], 'Вы настроили громкость участника и установили AFK.', 'You adjusted a participant’s volume and set your Away status.'), lesson('monitor', 'Мониторинг', 'Monitoring', [entry('edit', 'edit', 'Откройте настройки сервера', 'Edit a server profile', 'На карточке сервера нажмите «Изменить».', 'Select “Edit” on the server card.', 'Мониторинг задаётся отдельно для каждого сохранённого сервера.', 'Monitoring is enabled separately for each saved server.'), entry('monitor-on', 'monitor-toggle', 'Включите мониторинг', 'Enable periodic monitoring', 'Включите переключатель периодического мониторинга. Поле ID каналов можно оставить пустым.', 'Turn on periodic monitoring. You can leave the channel IDs field blank.', 'Пустое поле включает проверку всех каналов.', 'A blank field includes all channels.'), entry('save-profile', 'save-profile', 'Сохраните настройку', 'Save the setting', 'Нажмите «Сохранить». На карточке загорится ● MON.', 'Select “Save”. The card shows ● MON.', 'Если Android ограничивает фоновую работу, приложение предложит открыть настройки батареи.', 'If Android restricts background activity, the app offers to open battery settings.'), entry('settings', 'settings', 'Откройте общий интервал', 'Open the global settings', 'Нажмите шестерёнку на экране серверов.', 'Select the gear on the saved servers screen.', 'Интервал мониторинга задаётся сразу для всех профилей.', 'The interval applies to all monitored profiles.'), entry('interval', 'interval', 'Выберите интервал', 'Choose an interval', 'В разделе «Мониторинг» выберите другой интервал.', 'Choose a different interval under “Monitoring”.', 'Проверки периодические. Короткий визит пользователя между проверками может остаться незамеченным.', 'Checks are periodic, so a brief user visit between checks can be missed.'), entry('save-settings', 'save-settings', 'Сохраните интервал', 'Save the interval', 'Нажмите «Сохранить». Карточка покажет новый график.', 'Select “Save”. The card shows the updated schedule.', '', '')], 'Мониторинг включён, на карточке виден выбранный интервал.', 'Monitoring is enabled and the chosen interval is shown on the card.'), lesson('streams', 'Трансляции', 'Streams', [entry('watch', 'watch', 'Откройте трансляцию', 'Open a stream', 'Нажмите значок экрана справа от значков Nova.', 'Select the screen icon next to Nova’s badges.', 'Функция показана по отдельной сборке 0.10.5-dev с Screen Share. Требуется совместимый сервер с расширением stream_p2p.', 'This lesson uses the separate 0.10.9-dev Screen Share build. A compatible server with the stream_p2p extension is required.'), entry('hide', 'viewer-toggle', 'Спрячьте панель', 'Hide the control bar', 'Нажмите на окно воспроизведения. Нижняя панель скроется.', 'Select the playback area. The bottom bar will hide.', '', ''), entry('show', 'viewer-toggle', 'Верните панель', 'Show the control bar', 'Нажмите на окно воспроизведения ещё раз.', 'Select the playback area again.', '', ''), entry('close-viewer', 'watch-close', 'Выйдите из просмотра', 'Close the stream', 'Нажмите × вверху окна трансляции.', 'Select × at the top of the stream.', '', ''), entry('share-screen', 'share-screen', 'Начните свою трансляцию', 'Start sharing your screen', 'Нажмите значок демонстрации в нижней панели.', 'Select the screen sharing icon in the bottom bar.', '', ''), entry('capture', 'capture', 'Подтвердите запуск', 'Confirm screen sharing', 'Подтвердите запуск в окне. На Android вид системного запроса зависит от версии ОС.', 'Confirm in the dialog. On Android, the system prompt varies by OS version.', '', ''), entry('stop-screen', 'share-screen', 'Остановите трансляцию', 'Stop sharing', 'Снова нажмите значок демонстрации в нижней панели.', 'Select the screen sharing icon in the bottom bar again.', '', '')], 'Вы попробовали просмотр и управление своей трансляцией.', 'You practiced watching a stream and controlling your own.')];
+
+            const node = id => document.getElementById(id);
+            const app = node('app-view');
+            const intervals = [1, 2, 5, 10, 15, 30, 60, 120, 300, 720];
+            const channels = {
+                lounge: {
+                    title: 'lounge',
+                    detail: 'welcome',
+                    people: ['Mika', 'Nova', 'Echo']
+                },
+                gaming: {
+                    title: 'gaming',
+                    detail: 'gamingNote',
+                    people: ['Pixel'],
+                    parent: true
+                },
+                squad: {
+                    title: 'squad',
+                    detail: 'gamingNote',
+                    people: [],
+                    nested: true
+                },
+                quiet: {
+                    title: 'quietRoom',
+                    detail: '',
+                    people: [],
+                    locked: true
+                },
+                break: {
+                    title: 'afkRoom',
+                    detail: '',
+                    people: []
+                }
+            };
+            let finished = readLocal('completed', []);
+            if (!Array.isArray(finished))
+                finished = [];
+            const indexFromHash = () => Math.max(lessons.findIndex(item => '#' + item.id === location.hash), 0);
+            let lessonIndex = indexFromHash();
+            let stepIndex = 0;
+            let hint = false;
+            let state;
+            let lastTap;
+            let holdStarted = null;
+            let holdKey = null;
+            let toastTimer;
+            const current = () => lessons[lessonIndex];
+            const step = () => current().steps[stepIndex];
+            const highlight = () => app.querySelector(`[data-target="${step()?.target ?? ''}"]`);
+            const trainStreams = () => current().id === 'streams';
+            const sampleProfile = () => ({
+                name: '',
+                host: 'voice.example.org',
+                port: '9994',
+                password: '',
+                monitor: false,
+                ids: ''
+            });
+            const profileName = () => state.profile?.name || str('display');
+            function inviteUrl(profile) {
+                const bytes = new TextEncoder().encode(JSON.stringify({
+                    v: 1,
+                    host: profile.host,
+                    port: Number(profile.port),
+                    name: profile.name,
+                    password: profile.password
+                }));
+                return 'ts3x://server/add?data=' + btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+            }
+            const sampleLink = inviteUrl(sampleProfile());
+            function resetState() {
+                const startingAtHome = ['connect', 'invite', 'monitor'].includes(current().id);
+                state = {
+                    connected: !startingAtHome,
+                    profile: startingAtHome && current().id !== 'monitor' ? null : sampleProfile(),
+                    nickname: 'Mika',
+                    currentChannel: 'lounge',
+                    selected: 'lounge',
+                    collapsed: false,
+                    mic: false,
+                    ptt: false,
+                    audioMode: current().id === 'voice' ? 'always' : 'ptt',
+                    interval: 15,
+                    modal: '',
+                    draft: {},
+                    returnFocus: null,
+                    member: 'Nova',
+                    volume: {},
+                    away: false,
+                    awayMessage: '',
+                    chat: null,
+                    messages: {},
+                    chatDraft: '',
+                    watching: false,
+                    controls: true,
+                    sharing: false
+                };
+                stepIndex = 0;
+                hint = false;
+                lastTap = null;
+                holdStarted = null;
+                holdKey = null;
+                clearTimeout(toastTimer);
+            }
+            function advance(event) {
+                const accepted = step()?.matches === event;
+                if (!accepted)
+                    return false;
+                stepIndex++;
+                hint = false;
+                if (!step()) {
+                    finished = [...new Set([...finished, current().id])];
+                    writeLocal('completed', finished);
+                }
+                renderGuide();
+                return true;
+            }
+            function updateLocale() {
+                document.documentElement.lang = language;
+                document.title = language === 'ru' ? 'TS3X Client — интерактивное руководство' : 'TS3X Client — Interactive UI Guide';
+                document.querySelectorAll('[data-text]').forEach(element => {
+                    element.textContent = str(element.dataset.text);
+                }
+                );
+                document.querySelectorAll('[data-lang]').forEach(button => button.setAttribute('aria-pressed', button.dataset.lang === language));
+                document.querySelector('.lang').setAttribute('aria-label', language === 'ru' ? 'Язык' : 'Language');
+                document.querySelector('.stage').setAttribute('aria-label', str('stageLabel'));
+                node('navigation').setAttribute('aria-label', str('lessonNav'));
+            }
+            function guideButton(action, label, iconName, className='quiet', other='') {
+                return `<button type="button" class="${className}" data-guide="${action}" ${other}>${iconName ? icon(iconName) : ''}${esc(label)}</button>`;
+            }
+            function renderGuide() {
+                const active = step();
+                const total = current().steps.length;
+                node('navigation').innerHTML = lessons.map( (item, index) => `<button type="button" class="chapter" data-guide="lesson" data-index="${index}" aria-current="${index === lessonIndex ? 'step' : 'false'}" data-done="${finished.includes(item.id)}">${esc(item.name[language])}</button>`).join('');
+                node('step-meta').textContent = active ? (language === 'ru' ? `Шаг ${stepIndex + 1} из ${total}` : `Step ${stepIndex + 1} of ${total}`) : `${total} / ${total}`;
+                node('step-mode').innerHTML = icon(active ? 'mouse' : 'check') + esc(str(active ? 'action' : 'done'));
+                node('progress').innerHTML = current().steps.map( (_, index) => `<i class="${index < stepIndex ? 'past' : index === stepIndex ? 'current' : ''}"></i>`).join('');
+                const title = active ? active.title[language] : str('done');
+                node('step-title').textContent = title;
+                node('stage-current').textContent = title;
+                node('stage-badge').textContent = str(trainStreams() ? 'approx' : 'demo');
+                document.querySelector('.stage').dataset.preview = trainStreams();
+                document.querySelector('.workspace').classList.toggle('is-complete', !active);
+                node('step-description').textContent = active ? active.body[language] : current().finish[language];
+                const note = active?.note[language];
+                node('context').hidden = !note;
+                node('context').innerHTML = note ? icon('info') + `<span>${esc(note)}</span>` : '';
+                node('step-actions').innerHTML = active ? `${active.sample ? guideButton('sample', str('sample'), 'copy', 'primary') : ''}${guideButton('hint', str(hint ? 'hideHint' : 'hint'), 'bulb', 'quiet', `aria-pressed="${hint}"`)}` : guideButton(lessonIndex === lessons.length - 1 ? 'overview' : 'next', str(lessonIndex === lessons.length - 1 ? 'overview' : 'next'), 'right', 'primary');
+                node('status').textContent = active ? (hint ? str('selectHint') : '') : str('progressSaved');
+                node('bottom-links').innerHTML = `${guideButton('previous', str('previous'), 'left', 'link-button', lessonIndex === 0 ? 'disabled' : '')}${guideButton('restart', str('restart'), 'reset', 'link-button')}`;
+            }
+            function selectLesson(index, push=true, focus=true) {
+                lessonIndex = index;
+                if (push)
+                    history.pushState(null, '', '#' + current().id);
+                resetState();
+                renderGuide();
+                renderApp();
+                if (focus)
+                    node('step-title').focus();
+            }
+            function setHint(enabled) {
+                hint = enabled;
+                renderGuide();
+                updateHighlight();
+                const target = highlight();
+                if (hint && target)
+                    target.scrollIntoView({
+                        block: 'nearest',
+                        inline: 'nearest'
+                    });
+                if (hint && !target) {
+                    node('status').textContent = language === 'ru' ? 'Вернитесь к нужному экрану или нажмите «Заново», чтобы повторить урок.' : 'Return to the relevant screen or select Restart to repeat the lesson.';
+                }
+            }
+            function updateHighlight() {
+                app.querySelectorAll('.hint-target').forEach(element => element.classList.remove('hint-target'));
+                if (hint)
+                    highlight()?.classList.add('hint-target');
+            }
+            function button(action, label, css='pill', iconName='', extra='', target=action) {
+                return `<button type="button" class="${css}" data-action="${action}" data-target="${target}" ${extra}>${iconName ? icon(iconName) : ''}${css.includes('app-btn') ? '' : esc(label)}</button>`;
+            }
+            function appIcon(action, key, iconName, css='', target=action) {
+                const label = esc(str(key));
+                return button(action, label, `app-btn ${css}`, iconName, `aria-label="${label}" title="${label}"`, target);
+            }
+            function field(key, name, value, opts={}) {
+                const {type='text', disabled=false, placeholder='', note='', required=false} = opts;
+                return `<label class="field"><span>${esc(str(key))}</span><input name="${name}" data-target="${name}" type="${type}" value="${esc(value)}" placeholder="${esc(placeholder)}" ${disabled ? 'disabled' : ''} ${required ? 'required' : ''} autocomplete="off" spellcheck="false">${note ? `<small>${esc(note)}</small>` : ''}</label>`;
+            }
+            function languageWord(ru, en) {
+                return language === 'ru' ? ru : en;
+            }
+            function period(minutes) {
+                if (language === 'en')
+                    return minutes < 60 ? `${minutes} min` : `${minutes / 60} h`;
+                return minutes < 60 ? `${minutes} мин` : `${minutes / 60} ч`;
+            }
+            function serverIdent(profile=state.profile) {
+                return `<div class="server-icon" aria-hidden="true">${icon('headset')}</div><div><strong>${esc(profileName())}</strong><small class="server-sub">${esc(profile.host)}:${esc(profile.port)}</small></div>`;
+            }
+            function appBar() {
+                return `<div class="appbar"><img src="${logo}" alt=""><strong>TS3X Client</strong>${state.connected ? '' : appIcon('settings', 'settings', 'gear')}</div>`;
+            }
+            function home() {
+                const profile = state.profile;
+                const enabled = profile?.monitor;
+                const scope = profile?.ids.trim() || languageWord('все каналы', 'all channels');
+                const schedule = enabled ? languageWord(`Проверка каждые ${period(state.interval)}: ${scope}`, `Check online every ${period(state.interval)}: ${scope}`) : str('monOff');
+                const card = profile ? `<article class="server-card"><div class="server-ident">${serverIdent()}<span class="mon ${enabled ? 'on' : ''}">${enabled ? '●' : '○'} MON</span></div><p class="server-sub">${esc(schedule)}</p>
+    <div class="app-actions">${button('connect', str('connect'))}${button('edit', str('edit'), 'pill outline')}${button('delete', str('delete'), 'pill text')}</div></article>` : `<div class="empty"><strong>${esc(str('empty'))}</strong><small class="server-sub">${esc(str('emptyText'))}</small></div>`;
+                return `<div class="home screen-scroll"><div class="home-head"><div><h3>${esc(str('saved'))}</h3><small>${esc(str('listNickname'))}: ${esc(state.nickname)}</small></div>
+    <div class="home-buttons">${button('invite', str('invite'), 'pill outline')}${button('add', str('add'))}</div></div>
+    <p class="app-note">${esc(str('monitorExplain'))}</p>${card}</div>`;
+            }
+            function serverScreen() {
+                const selected = channels[state.selected];
+                return `<div class="server-top server-ident">${serverIdent()}${appIcon('share-server', 'shareServer', 'share')}${appIcon('disconnect', 'disconnect', 'exit')}</div>
+    <article class="ChannelDetails ${state.selected === 'gaming' ? 'practice-art' : ''}"><h3>${esc(str(selected.title))}</h3>${selected.detail ? `<p>${esc(str(selected.detail))}</p>` : ''}
+    ${appIcon('channel-chat', 'channelChat', 'chat')}</article>
+    <div class="tree screen-scroll" id="channel-tree">${channelRow('lounge')}<div class="divider-row">${esc(str('sections'))}</div>
+    ${channelRow('gaming')}${state.collapsed ? '' : channelRow('squad')}${channelRow('quiet')}${channelRow('break')}</div>${audioDock()}`;
+            }
+            function channelRow(key) {
+                const channel = channels[key];
+                const active = state.currentChannel === key;
+                const selected = state.selected === key;
+                const people = channel.people.filter(name => name !== 'Mika');
+                if (active)
+                    people.unshift('Mika');
+                const target = 'channel-' + key;
+                const expand = channel.parent ? button('expand', state.collapsed ? '▸' : '▾', 'expand', '', `aria-expanded="${!state.collapsed}" aria-label="${esc(languageWord('Вложенные каналы', 'Nested channels'))}"`, 'expand-gaming') : '';
+                return `<div class="channel-wrap ${active ? 'active' : selected ? 'selected' : ''}">${expand}<button class="channel ${channel.nested ? 'nested' : ''}" data-action="channel" data-channel="${key}" data-target="${target}" type="button" aria-pressed="${selected}">
+      ${active ? '<span class="tree-mark" aria-hidden="true">●</span>' : ''}${esc(str(channel.title))}${channel.locked ? icon('lock') : ''}
+      <span class="count">${people.length || ''}</span><span class="chevron" aria-hidden="true">›</span></button></div>
+      ${people.map(name => memberRow(name, channel.nested)).join('')}`;
+            }
+            function memberRow(name, nested) {
+                const self = name === 'Mika';
+                const display = self ? state.nickname : name;
+                const awayText = self && state.away ? ` <small class="server-sub">AFK${state.awayMessage ? ' · ' + esc(state.awayMessage.slice(0, 15)) : ''}</small>` : '';
+                const badge = {
+                    Mika: '🇬🇧',
+                    Nova: '◆ 🇩🇪',
+                    Echo: '🇷🇺',
+                    Pixel: '◆ 🇫🇮'
+                }[name];
+                const stream = trainStreams() && name === 'Nova' && state.currentChannel === 'lounge' ? appIcon('watch', 'watch', 'screen') : '';
+                return `<div class="member"><button class="row-action ${nested ? 'nested' : ''}" type="button" data-action="member" data-member="${name}" data-target="member-${name.toLowerCase()}">
+    <span class="avatar ${self ? 'own-avatar' : name === 'Nova' ? 'blue' : 'gold'} ${self && state.ptt ? 'speaking' : ''}">${esc(display[0]?.toUpperCase() || 'M')}</span><span class="member-name">${esc(display)}${awayText}</span>
+    ${self && state.mic ? icon('micOff') : ''}<span class="flag" aria-hidden="true">${badge}</span></button>${stream}</div>`;
+            }
+            function audioStatus() {
+                if (state.mic)
+                    return str('muted');
+                if (state.ptt)
+                    return str('transmitting');
+                return str(state.audioMode === 'ptt' ? 'push' : 'voice');
+            }
+            function audioDock() {
+                const mode = state.audioMode === 'ptt' ? button('ptt', state.ptt ? 'ON AIR' : 'PTT', 'ptt', '', `aria-pressed="${state.ptt}" ${state.mic ? 'disabled' : ''}`) : `<span class="meter" aria-hidden="true">${[5, 9, 14, 5, 12, 7, 16, 10, 7].map(height => `<b style="height:${state.mic ? 3 : height}px"></b>`).join('')}</span>`;
+                return `<div class="dock-wrap"><div class="dock"><span class="avatar own-avatar ${state.ptt ? 'speaking' : ''}">${esc(state.nickname[0]?.toUpperCase() || 'M')}</span>
+    <div class="dock-copy"><strong>${esc(state.nickname)}</strong><small data-audio-status>${esc(audioStatus())}</small></div>
+    ${appIcon('mic', state.mic ? 'unmute' : 'mute', state.mic ? 'micOff' : 'mic', state.mic ? 'muted' : '')}${mode}
+    ${trainStreams() ? appIcon('share-screen', state.sharing ? 'stopScreen' : 'shareScreen', 'screen', state.sharing ? 'active-stream' : '') : ''}
+    ${appIcon('settings', 'audioSettings', 'gear', '', 'audio-settings')}</div></div>`;
+            }
+            function sendForm() {
+                const privateChat = state.chat.type === 'private';
+                const canSend = privateChat || state.currentChannel === state.chat.channel;
+                const chatKey = privateChat ? 'private:' + state.chat.name : 'channel:' + state.chat.channel;
+                const history = state.messages[chatKey] ?? (privateChat ? [] : [{
+                    name: 'Nova',
+                    text: str('greeting')
+                }]);
+                return `<section class="chat" aria-label="${esc(str(privateChat ? 'privateMessages' : 'channelMessages'))}"><div class="chat-head">${icon('chat')}<div>
+    <strong>${esc(privateChat ? state.chat.name : str(channels[state.chat.channel].title))}</strong>
+    <small class="server-sub">${esc(str(privateChat ? 'privateMessages' : 'channelMessages'))}</small></div>${appIcon('close-chat', 'close', 'close')}</div>
+    <div class="chat-log" role="log" aria-live="polite">${history.length ? history.map(msg => `<div class="${msg.mine ? 'mine' : ''}"><b>${esc(msg.name)}</b><p>${esc(msg.text)}</p></div>`).join('') : `<small class="server-sub">${esc(languageWord('Сообщений пока нет', 'No messages yet'))}</small>`}</div>
+    ${!canSend ? `<p class="app-note">${esc(str('joinToSend'))}</p>` : ''}
+    <form class="compose" data-form="chat"><input name="chat-input" autocomplete="off" maxlength="1000" aria-label="${esc(str('message'))}" placeholder="${esc(str('message'))}" data-target="chat-input" value="${esc(state.chatDraft)}" ${!canSend ? 'disabled' : ''}>
+    <button class="app-btn" type="submit" aria-label="${esc(str('send'))}" title="${esc(str('send'))}" ${!canSend || !state.chatDraft.trim() ? 'disabled' : ''}>${icon('send')}</button></form></section>`;
+            }
+            function viewer() {
+                return `<section class="viewer" aria-label="${esc(str('watch'))}">
+    <button type="button" class="viewer-toggle" data-action="viewer-toggle" data-target="viewer-toggle" aria-label="${esc(str('tapStream'))}">
+    <span class="sample-video"><i class="sample-sidebar"></i><span class="sample-content">Nova · Desktop<small>${esc(str('sampleFrame'))}</small></span></span></button>
+    ${state.controls ? `<div class="viewer-head"><strong>Nova · Desktop</strong>${appIcon('watch-close', 'watchClose', 'close')}</div>${audioDock()}` : ''}</section>`;
+            }
+            function modalShell(title, body, actions='', css='compact', closeIcon=false) {
+                return `<div class="modals" data-backdrop><section class="app-modal ${css}" aria-label="${esc(title)}" role="dialog">
+    <div style="display:flex;justify-content:space-between;align-items:start;gap:4px"><h3 tabindex="-1">${esc(title)}</h3>${closeIcon ? appIcon('close-modal', 'close', 'close') : ''}</div>
+    <div class="modal-body" data-modal-body>${body}<p class="form-error" role="alert" data-error hidden></p></div>
+    ${actions ? `<div class="modal-actions">${actions}</div>` : ''}</section></div>`;
+            }
+            function shellButtons(action, key='save') {
+                return button('close-modal', str('cancel'), 'pill text') + button(action, str(key), 'pill text');
+            }
+            function serverEditor() {
+                const draft = state.draft;
+                const embedded = getAddress(draft.host, draft.port)?.embedded;
+                const shownPort = embedded ? getAddress(draft.host, draft.port).port : draft.port;
+                const ids = `<label class="field" data-monitor-ids ${!draft.monitor ? 'hidden' : ''}><span>${esc(str('monitorIds'))}</span><textarea name="ids" rows="2" autocomplete="off">${esc(draft.ids)}</textarea><small>${esc(str('monitorAll'))}</small></label>`;
+                return modalShell(str(draft.editing ? 'editTitle' : 'addTitle'), `
+    ${field('name', 'name', draft.name)}${field('host', 'host', draft.host, {
+                    note: str('hostHint')
+                })}
+    ${field('port', 'port', shownPort, {
+                    disabled: embedded,
+                    placeholder: '9987',
+                    note: str('portFrom')
+                }).replace('<small>', '<small data-port-note ' + (embedded ? '' : 'hidden') + '>')}
+    ${field('password', 'password', draft.password, {
+                    type: 'password'
+                })}
+    <label class="switch-row"><input type="checkbox" name="monitor-toggle" data-target="monitor-toggle" ${draft.monitor ? 'checked' : ''}><span>${esc(str('monitor'))}<small class="server-sub">${esc(str('monitorBrief'))}</small></span></label>${ids}`, shellButtons('save-profile'));
+            }
+            function inviteEditor() {
+                return modalShell(str('importTitle'), `<p class="server-sub">${esc(str('importExplain'))}</p><label class="field"><span>ts3x://server/add?…</span><textarea rows="3" name="invite-value" data-target="invite-value" autocomplete="off" spellcheck="false">${esc(state.draft.inviteValue)}</textarea></label>`, shellButtons('import', 'import'));
+            }
+            function settingsModal() {
+                const draft = state.draft;
+                const audio = `<h4 class="settings-title">${esc(str('audio'))}</h4>
+    <div class="segment">${button('pick-ptt', 'Push-to-Talk', 'seg', '', `aria-pressed="${draft.audioMode === 'ptt'}"`)}
+    ${button('pick-always', 'AlwaysOn', 'seg', '', `aria-pressed="${draft.audioMode === 'always'}"`)}</div>
+    <label class="field" data-threshold ${draft.audioMode === 'always' ? '' : 'hidden'}><span>Voice activation threshold: <output data-threshold-value>${draft.threshold}</output>%</span>
+    <input name="threshold" class="slider" type="range" min="1" max="50" value="${draft.threshold}"></label>
+    ${deviceField('audioIn', 'inputDevice')}${deviceField('audioOut', 'outputDevice')}`;
+                const monitoring = `<h4 class="settings-title">${esc(str('monitoring'))}</h4>
+    <label class="field"><span>${esc(str('interval'))}</span><select name="interval" data-target="interval">${intervals.map(n => `<option value="${n}" ${n === draft.interval ? 'selected' : ''}>${n < 60 ? `${n} minute${n === 1 ? '' : 's'}` : `${n / 60} hour${n === 60 ? '' : 's'}`}</option>`).join('')}</select></label>`;
+                const details = current().id === 'monitor' ? monitoring + audio : audio + monitoring;
+                return modalShell(str('settings'), `<h4 class="settings-title">${esc(str('identity'))}</h4>${field('nickname', 'nickname', draft.nickname)}${details}`, shellButtons('save-settings'), 'tall');
+            }
+            function deviceField(key, name) {
+                return `<label class="field"><span>${esc(str(key))}</span><select name="${name}"><option value="default">${esc(str('default'))}</option><option value="sample" ${state.draft[name] === 'sample' ? 'selected' : ''}>${esc(languageWord('Учебное устройство', 'Sample device'))}</option></select></label>`;
+            }
+            function menuRow(action, key, iconName) {
+                return button(action, str(key), 'modal-menu-btn', iconName);
+            }
+            function participantModal() {
+                const displayName = state.member === 'Mika' ? state.nickname : state.member;
+                if (state.modal === 'volume') {
+                    return modalShell(str('volume'), `<label class="field"><span><output data-volume-value>${state.volume[state.member] ?? 100}</output>%</span>
+      <input class="slider" data-target="volume-slider" name="volume-slider" aria-label="${esc(str('volume'))}" type="range" min="0" max="200" value="${state.volume[state.member] ?? 100}"></label>
+      <div style="display:flex;justify-content:space-between;align-items:center" class="server-sub"><span>0%</span>${button('volume-reset', '100% (Reset)', 'pill text')}<span>200%</span></div>`, '', 'compact', true);
+                }
+                if (state.modal === 'away') {
+                    return modalShell(str('away'), `<label class="switch-row"><input type="checkbox" name="away-toggle" data-target="away-toggle" ${state.draft.away ? 'checked' : ''}><span>${esc(str('away'))}</span></label>
+      ${field('awayMessage', 'awayMessage', state.draft.awayMessage, {
+                        placeholder: str('awayExample')
+                    })}`, button('member-back', str('back'), 'pill text') + button('away-save', str('apply'), 'pill text'), 'compact', true);
+                }
+                if (state.modal === 'member') {
+                    return modalShell(displayName, `
+      ${state.member === 'Mika' ? menuRow('away', 'awayToggle', 'clock') : menuRow('private-chat', 'messages', 'chat')}
+      ${menuRow('poke', 'poke', 'poke')}${menuRow('volume', 'volume', 'volume')}${menuRow('connectionInfo', 'connectionInfo', 'info')}
+      <p class="server-sub">${esc(str('permissions'))}</p>${menuRow('groups', 'groups', 'group')}${menuRow('channelGroups', 'channelGroups', 'group')}
+    `, '', 'compact', true);
+                }
+                const stats = state.modal === 'connectionInfo' ? '<p class="server-sub">Ping · 27 ms</p><p class="server-sub">Packet loss · 0%</p>' : `<p class="server-sub">${esc(str('unavailable'))}</p>`;
+                return modalShell(str(state.modal), stats, button('member-back', str('back'), 'pill text'), 'compact', true);
+            }
+            function renderModal() {
+                if (state.modal === 'server')
+                    return serverEditor();
+                if (state.modal === 'invite')
+                    return inviteEditor();
+                if (state.modal === 'settings')
+                    return settingsModal();
+                if (['member', 'volume', 'away', 'connectionInfo', 'groups', 'channelGroups'].includes(state.modal))
+                    return participantModal();
+                if (state.modal === 'delete')
+                    return modalShell(languageWord('Удалить сервер?', 'Delete server?'), `<p class="server-sub">${esc(profileName())}</p>`, shellButtons('delete-confirm', 'delete'));
+                if (state.modal === 'share-server')
+                    return modalShell(str('systemShare'), `<label class="field"><span>${esc(str('invite'))}</span><textarea readonly rows="4">${esc(inviteUrl(state.profile))}</textarea></label>`, button('close-modal', str('close'), 'pill text'));
+                if (state.modal === 'capture')
+                    return modalShell(str('capture'), `<p class="server-sub">${esc(str('captureInfo'))}</p>`, shellButtons('capture', 'start'));
+                if (state.modal === 'channel-password')
+                    return modalShell(languageWord('Пароль канала', 'Channel password'), field('password', 'channel-password', '', {
+                        type: 'password',
+                        note: languageWord('Учебный пароль: demo', 'Practice password: demo')
+                    }), shellButtons('join-locked', languageWord('Войти', 'Join')));
+                return '';
+            }
+            function renderApp() {
+                const viewScroll = app.querySelector('.screen-scroll')?.scrollTop || 0;
+                const focus = app.contains(document.activeElement) ? document.activeElement.dataset.target : null;
+                const homeOrServer = appBar() + (state.connected ? serverScreen() : home());
+                const content = state.watching ? viewer() : state.chat ? sendForm() : homeOrServer;
+                app.innerHTML = `<div class="app-underlay" ${state.modal ? 'inert' : ''}>${content}</div>${renderModal()}`;
+                node('device').classList.toggle('statusless', state.watching && !state.controls);
+                node('device').dataset.connected = state.connected;
+                const scroll = app.querySelector('.screen-scroll');
+                if (scroll)
+                    scroll.scrollTop = viewScroll;
+                const log = app.querySelector('.chat-log');
+                if (log)
+                    log.scrollTop = log.scrollHeight;
+                updateHighlight();
+                if (focus) {
+                    const equivalent = [...app.querySelectorAll('[data-target]')].find(element => element.dataset.target === focus && !element.closest('[inert]'));
+                    if (equivalent)
+                        equivalent.focus({
+                            preventScroll: true
+                        });
+                    else if (state.modal)
+                        app.querySelector('.app-modal h3')?.focus({
+                            preventScroll: true
+                        });
+                    else if (state.chat)
+                        app.querySelector('[name="chat-input"]')?.focus({
+                            preventScroll: true
+                        });
+                    else if (state.returnFocus) {
+                        const trigger = [...app.querySelectorAll('[data-target]')].find(element => element.dataset.target === state.returnFocus);
+                        trigger?.focus({
+                            preventScroll: true
+                        });
+                        state.returnFocus = null;
+                    }
+                }
+            }
+            function feedback(message) {
+                clearTimeout(toastTimer);
+                app.querySelector('.toast')?.remove();
+                const element = document.createElement('div');
+                element.className = 'toast';
+                element.role = 'status';
+                element.textContent = message;
+                app.append(element);
+                toastTimer = setTimeout( () => element.remove(), 3000);
+            }
+            function error(message) {
+                const element = app.querySelector('[data-error]');
+                if (element) {
+                    element.hidden = false;
+                    element.textContent = message;
+                }
+            }
+            function clearError() {
+                const element = app.querySelector('[data-error]');
+                if (element) {
+                    element.hidden = true;
+                    element.textContent = '';
+                }
+            }
+            function getAddress(value, override) {
+                const match = value.trim().match(/^(\[[a-f\d:.]+\]|[a-z\d-]+(?:\.[a-z\d-]+)*)(?::(\d{1,5}))?$/i);
+                const unbracketed = !match && /^[a-f\d:]+$/i.test(value.trim()) && value.split(':').length > 2 ? value.trim() : '';
+                if (!match && !unbracketed)
+                    return null;
+                const port = match?.[2] || override.trim() || '9987';
+                if (!/^\d+$/.test(port) || Number(port) > 65535 || Number(port) < 1)
+                    return null;
+                const host = (match?.[1] ?? unbracketed).replace(/^\[|\]$/g, '');
+                return {
+                    host,
+                    port: String(Number(port)),
+                    embedded: Boolean(match?.[2])
+                };
+            }
+            function parseInvite(value) {
+                try {
+                    const url = new URL(value.trim());
+                    if (url.protocol === 'ts3x:' && url.hostname === 'server' && /^\/add\/?$/.test(url.pathname)) {
+                        const encoded = url.searchParams.get('data');
+                        if (!encoded || encoded.length > 8192 || [...url.searchParams].length !== 1)
+                            return null;
+                        const decoded = atob(encoded.replace(/-/g, '+').replace(/_/g, '/'));
+                        const invite = JSON.parse(new TextDecoder().decode(Uint8Array.from(decoded, c => c.charCodeAt(0))));
+                        const address = getAddress(String(invite.host ?? ''), String(invite.port ?? ''));
+                        if (invite.v !== 1 || !address || !Number.isInteger(invite.port) || (invite.name?.length ?? 0) > 256)
+                            return null;
+                        return {
+                            ...sampleProfile(),
+                            ...address,
+                            name: typeof invite.name === 'string' ? invite.name : ''
+                        };
+                    }
+                    if (url.protocol === 'https:' && ['tmspk.gg', 'www.tmspk.gg'].includes(url.hostname) && url.pathname.startsWith('/s/')) {
+                        const address = getAddress(decodeURIComponent(url.pathname.slice(3)), url.searchParams.get('port') ?? '');
+                        return address ? {
+                            ...sampleProfile(),
+                            ...address
+                        } : null;
+                    }
+                } catch {
+                    return null;
+                }
+                return null;
+            }
+            function updateEditorPort() {
+                const address = getAddress(state.draft.host, state.draft.port);
+                const port = app.querySelector('[name="port"]');
+                if (!port)
+                    return;
+                port.disabled = Boolean(address?.embedded);
+                port.value = address?.embedded ? address.port : state.draft.port;
+                const note = app.querySelector('[data-port-note]');
+                if (note)
+                    note.hidden = !port.disabled;
+            }
+            function syncAudioPicker() {
+                app.querySelector('[data-action="pick-ptt"]').setAttribute('aria-pressed', state.draft.audioMode === 'ptt');
+                app.querySelector('[data-action="pick-always"]').setAttribute('aria-pressed', state.draft.audioMode === 'always');
+                app.querySelector('[data-threshold]').hidden = state.draft.audioMode !== 'always';
+            }
+            function openModal(name, draft={}) {
+                if (!state.modal)
+                    state.returnFocus = document.activeElement?.dataset.target ?? null;
+                state.modal = name;
+                state.draft = draft;
+            }
+            function closeModal() {
+                state.modal = '';
+                state.draft = {};
+            }
+            function channelTap(key) {
+                const now = performance.now();
+                if (lastTap?.key === key && now - lastTap.time <= 430) {
+                    lastTap = null;
+                    if (channels[key].locked && key !== state.currentChannel)
+                        openModal('channel-password', {
+                            channel: key
+                        });
+                    else {
+                        state.selected = state.currentChannel = key;
+                        if (key === 'gaming')
+                            advance('join');
+                    }
+                } else {
+                    state.selected = key;
+                    const previewAdvanced = key === 'gaming' && advance('preview');
+                    lastTap = previewAdvanced ? null : {
+                        key,
+                        time: now
+                    };
+                }
+                renderApp();
+            }
+            function profileChange() {
+                const draft = state.draft;
+                const address = getAddress(draft.host, draft.port);
+                if (!address) {
+                    error(str('invalidHost'));
+                    return false;
+                }
+                advance('valid-host');
+                state.profile = {
+                    ...sampleProfile(),
+                    ...address,
+                    name: draft.name.trim(),
+                    password: draft.password,
+                    monitor: draft.monitor,
+                    ids: draft.ids
+                };
+                closeModal();
+                return true;
+            }
+            function openChat(type) {
+                state.chat = type === 'channel' ? {
+                    type,
+                    channel: state.selected
+                } : {
+                    type,
+                    name: state.member
+                };
+                state.chatDraft = '';
+                closeModal();
+            }
+            function sendChat() {
+                const {chat, chatDraft} = state;
+                if (!chat || !chatDraft.trim() || (chat.type === 'channel' && chat.channel !== state.currentChannel))
+                    return;
+                const privateChat = chat.type === 'private';
+                const key = privateChat ? 'private:' + chat.name : 'channel:' + chat.channel;
+                state.messages[key] ??= privateChat ? [] : [{
+                    name: 'Nova',
+                    text: str('greeting')
+                }];
+                state.messages[key].push({
+                    name: state.nickname,
+                    text: chatDraft.trim(),
+                    mine: true
+                });
+                state.chatDraft = '';
+                advance(privateChat ? 'send-private' : 'send-channel');
+                renderApp();
+            }
+            function handleAppAction(action, element) {
+                let event = action;
+                let message = '';
+                switch (action) {
+                case 'add':
+                    openModal('server', {
+                        ...sampleProfile(),
+                        host: '',
+                        port: '9987'
+                    });
+                    break;
+                case 'edit':
+                    openModal('server', {
+                        ...state.profile,
+                        editing: true
+                    });
+                    break;
+                case 'delete':
+                    openModal('delete');
+                    break;
+                case 'delete-confirm':
+                    state.profile = null;
+                    closeModal();
+                    message = str('removed');
+                    break;
+                case 'invite':
+                    openModal('invite', {
+                        inviteValue: ''
+                    });
+                    break;
+                case 'import':
+                    {
+                        const invite = parseInvite(state.draft.inviteValue);
+                        if (!invite) {
+                            error(str('invalidInvite'));
+                            return;
+                        }
+                        advance('valid-invite');
+                        state.profile = invite;
+                        closeModal();
+                        break;
+                    }
+                case 'save-profile':
+                    if (!profileChange())
+                        return;
+                    break;
+                case 'connect':
+                    state.connected = true;
+                    state.selected = state.currentChannel = 'lounge';
+                    break;
+                case 'disconnect':
+                    state.connected = false;
+                    state.mic = false;
+                    closeModal();
+                    break;
+                case 'share-server':
+                    openModal('share-server');
+                    break;
+                case 'settings':
+                    openModal('settings', {
+                        nickname: state.nickname,
+                        audioMode: state.audioMode,
+                        interval: state.interval,
+                        threshold: state.threshold ?? 20,
+                        inputDevice: state.inputDevice,
+                        outputDevice: state.outputDevice
+                    });
+                    break;
+                case 'pick-ptt':
+                case 'pick-always':
+                    state.draft.audioMode = action === 'pick-ptt' ? 'ptt' : 'always';
+                    syncAudioPicker();
+                    advance(action);
+                    return;
+                case 'save-settings':
+                    Object.assign(state, {
+                        audioMode: state.draft.audioMode,
+                        interval: state.draft.interval,
+                        nickname: state.draft.nickname.trim() || 'Mika',
+                        threshold: state.draft.threshold,
+                        inputDevice: state.draft.inputDevice,
+                        outputDevice: state.draft.outputDevice
+                    });
+                    closeModal();
+                    break;
+                case 'channel':
+                    channelTap(element.dataset.channel);
+                    return;
+                case 'join-locked':
+                    if (state.draft.channelPassword !== 'demo') {
+                        error(languageWord('Учебный пароль: demo', 'Practice password: demo'));
+                        return;
+                    }
+                    state.selected = state.currentChannel = state.draft.channel;
+                    closeModal();
+                    break;
+                case 'expand':
+                    state.collapsed = !state.collapsed;
+                    event = state.collapsed ? 'collapse' : 'expand';
+                    break;
+                case 'channel-chat':
+                    openChat('channel');
+                    event = 'chat';
+                    break;
+                case 'private-chat':
+                    openChat('private');
+                    event = 'pm';
+                    break;
+                case 'close-chat':
+                    state.chat = null;
+                    break;
+                case 'member':
+                    state.member = element.dataset.member;
+                    openModal('member');
+                    event = 'member-' + state.member.toLowerCase();
+                    break;
+                case 'member-back':
+                    openModal('member');
+                    break;
+                case 'close-modal':
+                    if (['member', 'volume', 'away', 'connectionInfo', 'groups', 'channelGroups'].includes(state.modal))
+                        event = 'close-member';
+                    closeModal();
+                    break;
+                case 'volume':
+                case 'connectionInfo':
+                case 'groups':
+                case 'channelGroups':
+                    state.modal = action;
+                    break;
+                case 'volume-reset':
+                    state.volume[state.member] = 100;
+                    break;
+                case 'poke':
+                    message = str('pokeSent');
+                    break;
+                case 'away':
+                    openModal('away', {
+                        away: state.away,
+                        awayMessage: state.awayMessage
+                    });
+                    break;
+                case 'away-save':
+                    state.away = state.draft.away;
+                    state.awayMessage = state.draft.awayMessage;
+                    closeModal();
+                    break;
+                case 'mic':
+                    state.mic = !state.mic;
+                    event = state.mic ? 'mute' : 'unmute';
+                    break;
+                case 'watch':
+                    state.watching = true;
+                    state.controls = true;
+                    break;
+                case 'viewer-toggle':
+                    state.controls = !state.controls;
+                    event = state.controls ? 'show' : 'hide';
+                    break;
+                case 'watch-close':
+                    state.watching = false;
+                    event = 'close-viewer';
+                    break;
+                case 'share-screen':
+                    if (state.sharing) {
+                        state.sharing = false;
+                        event = 'stop-screen';
+                    } else
+                        openModal('capture');
+                    break;
+                case 'capture':
+                    state.sharing = true;
+                    closeModal();
+                    break;
+                default:
+                    return;
+                }
+                advance(event);
+                renderApp();
+                if (message)
+                    feedback(message);
+            }
+            function updateInput(input) {
+                const {name, value, checked} = input;
+                clearError();
+                switch (name) {
+                case 'host':
+                    state.draft.host = value;
+                    updateEditorPort();
+                    if (value.includes('.') && getAddress(value, state.draft.port))
+                        advance('valid-host');
+                    break;
+                case 'port':
+                    state.draft.port = value;
+                    break;
+                case 'monitor-toggle':
+                    state.draft.monitor = checked;
+                    app.querySelector('[data-monitor-ids]').hidden = !checked;
+                    if (checked)
+                        advance('monitor-on');
+                    break;
+                case 'invite-value':
+                    state.draft.inviteValue = value;
+                    if (parseInvite(value))
+                        advance('valid-invite');
+                    break;
+                case 'chat-input':
+                    state.chatDraft = value;
+                    app.querySelector('.compose button').disabled = !value.trim();
+                    break;
+                case 'interval':
+                    state.draft.interval = Number(value);
+                    advance('interval');
+                    break;
+                case 'threshold':
+                    state.draft.threshold = Number(value);
+                    app.querySelector('[data-threshold-value]').textContent = value;
+                    break;
+                case 'volume-slider':
+                    state.volume[state.member] = Number(value);
+                    app.querySelector('[data-volume-value]').textContent = value;
+                    advance('volume-changed');
+                    break;
+                case 'away-toggle':
+                    state.draft.away = checked;
+                    if (checked)
+                        advance('away-on');
+                    break;
+                case 'channel-password':
+                    state.draft.channelPassword = value;
+                    break;
+                case 'name':
+                case 'password':
+                case 'ids':
+                case 'nickname':
+                case 'awayMessage':
+                case 'inputDevice':
+                case 'outputDevice':
+                    state.draft[name] = value;
+                    break;
+                }
+                updateHighlight();
+            }
+            function fillSample(sample) {
+                const inputName = {
+                    host: 'host',
+                    invite: 'invite-value',
+                    message: 'chat-input',
+                    private: 'chat-input'
+                }[sample];
+                const input = app.querySelector(`[name="${inputName}"]`);
+                if (!input || input.disabled) {
+                    node('status').textContent = languageWord('Откройте нужное поле на экране приложения.', 'Open the relevant field on the app screen.');
+                    return;
+                }
+                input.value = {
+                    host: sampleAddress,
+                    invite: sampleLink,
+                    message: str('messageExample'),
+                    private: str('privateExample')
+                }[sample];
+                updateInput(input);
+                input.focus();
+            }
+            function pttChange(pressed, allowCredit=true) {
+                if (!pressed && !state.ptt)
+                    return;
+                if (pressed && (state.mic || state.ptt))
+                    return;
+                if (pressed)
+                    holdStarted = performance.now();
+                state.ptt = pressed;
+                app.querySelectorAll('[data-target="ptt"]').forEach(element => {
+                    element.textContent = pressed ? 'ON AIR' : 'PTT';
+                    element.setAttribute('aria-pressed', String(pressed));
+                }
+                );
+                app.querySelectorAll('.own-avatar').forEach(element => element.classList.toggle('speaking', pressed));
+                app.querySelectorAll('[data-audio-status]').forEach(element => {
+                    element.textContent = audioStatus();
+                }
+                );
+                if (!pressed) {
+                    if (allowCredit && performance.now() - holdStarted >= 600)
+                        advance('ptt');
+                    holdStarted = null;
+                    holdKey = null;
+                    updateHighlight();
+                }
+            }
+            document.querySelectorAll('[data-icon]').forEach(element => element.insertAdjacentHTML('afterbegin', icon(element.dataset.icon)));
+            document.querySelectorAll('[data-logo]').forEach(element => {
+                element.src = logo;
+            }
+            );
+            document.addEventListener('click', event => {
+                const button = event.target.closest('button');
+                if (!button)
+                    return;
+                if (button.dataset.lang) {
+                    language = button.dataset.lang;
+                    writeLocal('language', language);
+                    if (location.protocol === 'http:' || location.protocol === 'https:') {
+                        const url = new URL(location.href);
+                        url.searchParams.set('lang', language);
+                        history.replaceState(null, '', url);
+                    }
+                    updateLocale();
+                    renderGuide();
+                    renderApp();
+                }
+                const action = button.dataset.guide;
+                if (action === 'lesson')
+                    selectLesson(Number(button.dataset.index));
+                if (action === 'restart')
+                    selectLesson(lessonIndex, false);
+                if (action === 'hint') {
+                    setHint(!hint);
+                    node('step-actions').querySelector('[data-guide="hint"]')?.focus({
+                        preventScroll: true
+                    });
+                }
+                if (action === 'sample')
+                    fillSample(step()?.sample);
+                if (action === 'previous')
+                    selectLesson(Math.max(0, lessonIndex - 1));
+                if (action === 'next')
+                    selectLesson(Math.min(lessons.length - 1, lessonIndex + 1));
+                if (action === 'overview')
+                    selectLesson(0);
+            }
+            );
+            app.addEventListener('click', event => {
+                const target = event.target.closest('[data-action]');
+                if (target && !target.disabled)
+                    handleAppAction(target.dataset.action, target);
+                if (event.target.matches('[data-backdrop]'))
+                    handleAppAction('close-modal');
+            }
+            );
+            app.addEventListener('input', event => updateInput(event.target));
+            app.addEventListener('focusout', event => {
+                if (event.target.name === 'host' && getAddress(state.draft.host, state.draft.port))
+                    advance('valid-host');
+                if (event.target.dataset.target === 'ptt' && holdKey)
+                    pttChange(false, false);
+            }
+            );
+            app.addEventListener('submit', event => {
+                event.preventDefault();
+                if (event.target.dataset.form === 'chat')
+                    sendChat();
+            }
+            );
+            app.addEventListener('pointerdown', event => {
+                const ptt = event.target.closest('[data-target="ptt"]');
+                if (!ptt || ptt.disabled || event.button !== 0)
+                    return;
+                ptt.setPointerCapture(event.pointerId);
+                pttChange(true);
+            }
+            );
+            app.addEventListener('pointerup', event => {
+                if (event.target.dataset.target === 'ptt')
+                    pttChange(false);
+            }
+            );
+            app.addEventListener('pointercancel', () => pttChange(false, false));
+            app.addEventListener('lostpointercapture', () => pttChange(false, false));
+            app.addEventListener('keydown', event => {
+                const target = event.target;
+                if (target.dataset.target === 'ptt' && [' ', 'Enter'].includes(event.key)) {
+                    event.preventDefault();
+                    if (!event.repeat) {
+                        holdKey = event.key;
+                        pttChange(true);
+                    }
+                }
+                if (event.key === 'Enter' && target.name === 'host') {
+                    event.preventDefault();
+                    if (getAddress(state.draft.host, state.draft.port))
+                        advance('valid-host');
+                    else
+                        error(str('invalidHost'));
+                }
+            }
+            );
+            window.addEventListener('keyup', event => {
+                if (event.key === holdKey)
+                    pttChange(false);
+            }
+            );
+            window.addEventListener('blur', () => pttChange(false, false));
+            document.addEventListener('keydown', event => {
+                if (event.key !== 'Escape')
+                    return;
+                if (state.modal)
+                    handleAppAction('close-modal');
+                else if (state.chat)
+                    handleAppAction('close-chat');
+                else if (state.watching)
+                    handleAppAction('watch-close');
+            }
+            );
+            node('stage-current').addEventListener('click', event => {
+                event.preventDefault();
+                node('step-title').focus();
+            }
+            );
+            node('brand').addEventListener('click', event => {
+                event.preventDefault();
+                selectLesson(0);
+            }
+            );
+            window.addEventListener('hashchange', () => {
+                const index = indexFromHash();
+                if (index !== lessonIndex)
+                    selectLesson(index, false, false);
+            }
+            );
+            resetState();
+            updateLocale();
+            renderGuide();
+            renderApp();
+        </script>
+    </body>
+</html>
