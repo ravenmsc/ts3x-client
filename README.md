@@ -6,6 +6,8 @@ An Android voice client for **TeamSpeak 3 and TeamSpeak 6** servers, built with 
 
 TS3X Client is an independent project and is not an official TeamSpeak product. TeamSpeak names and trademarks belong to their respective owners.
 
+[Open the interactive TS3X Client UI Guide](https://ravenmsc.github.io/ts3x-client/?lang=en)
+
 ## Features
 
 - Connect to TS3 and TS6 servers through a single interface, with saved server profiles, passwords and identities.
